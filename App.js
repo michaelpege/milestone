@@ -1,12 +1,19 @@
-import React from 'react';
-import { Text, View } from 'react-native';
+import React from "react";
+import { Text, View } from "react-native";
+import { Biodata } from "./components/biodata";
 
-class App extends React.Component{
-  render(){
-    return(
-      <View style={styles.container}>
-        <Text>Open up App.js to start working on your app!</Text>
+class App extends React.Component {
+  render() {
+    let data = {
+      nama: "pege",
+      umur: 19,
+    };
+    return (
+      <View>
+        <Text>YEY!!!!</Text>
+        <Biodata data={data} />
       </View>
-    )
+    );
   }
 }
+export default App;

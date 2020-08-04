@@ -1,14 +1,16 @@
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React from "react";
+import { StyleSheet, Text, View } from "react-native";
 
-class biodata extends React.Component{
-    render(){
-        return(
-            <View>
-                <Text>Ini bagian biodata user hari ini</Text>
-            </View>
-        )
-    }
+class Biodata extends React.Component {
+  render() {
+    let { nama, umur } = this.props.data;
+    return (
+      <View>
+        <Text>{`Hello ${nama}`}</Text>
+        <Text>{"Umurku :  " + umur}</Text>
+      </View>
+    );
+  }
 }
 
-export {biodata};
+export { Biodata };
