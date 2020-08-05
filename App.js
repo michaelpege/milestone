@@ -1,21 +1,40 @@
-import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React from "react";
+import {
+  Text,
+  View,
+  SafeAreaView,
+  Button,
+  TouchableHighlight,
+} from "react-native";
+import { Biodata } from "./components/Biodata";
+import { FoodEaten } from "./components/Food";
+import {Statistic} from "./components/statistic";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import DateTimePicker from "@react-native-community/datetimepicker";
+import Modal from "react-native-modal";
+import {ProgressBar} from "./components/statistic";
 
-export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
+class App extends React.Component {
+  state = {
+    modalActive: false,
+    text: "",
+  };
+  toggleModal(modalActive) {
+    this.setState({ modalActive: modalActive });
+  }
+  pushText() {
+    let text = this.state.text;
+    text += "cekrek ";
+    this.setState({ text });
+  }
+  render() {
+    let data = {
+      nama: "Alwan",
+      umur: 19,
+    };
+    return(
+      <Statistic />
+    );
+  }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+export default App;
