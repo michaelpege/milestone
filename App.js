@@ -1,10 +1,11 @@
-import React from "react";
+import React, {useState} from "react";
 import {
   Text,
   View,
   SafeAreaView,
   Button,
   TouchableHighlight,
+  StyleSheet,
 } from "react-native";
 import { Biodata } from "./components/Biodata";
 import { FoodEaten } from "./components/Food";
@@ -12,45 +13,46 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 import DateTimePicker from "@react-native-community/datetimepicker";
 import Modal from "react-native-modal";
 
-class App extends React.Component {
-  state = {
-    modalActive: false,
-    text: "",
-  };
-  toggleModal(modalActive) {
-    this.setState({ modalActive: modalActive });
-  }
-  pushText() {
-    let text = this.state.text;
-    text += "cekrek ";
-    this.setState({ text });
-  }
-  render() {
-    let data = {
-      nama: "Alwan",
-      umur: 19,
-    };
-    return (
-      <SafeAreaView>
-        <Biodata data={data} />
-        <FoodEaten />
-        <Text>{`Your log : ${this.state.text}`}</Text>
-        <Modal
-          isVisible={this.state.modalActive}
-          onBackdropPress={() => this.toggleModal(false)}
-        >
-          <Text>YEY MODALNYA KEBUKA!</Text>
-          <Button
-            onPress={() => this.toggleModal(false)}
-            title={"Tutup Modal"}
-          />
-        </Modal>
-        <Button onPress={() => this.toggleModal(true)} title={"Buka Modal"} />
-        <TouchableHighlight onPress={() => this.pushText()}>
-          <MaterialCommunityIcons name='camera' color={"#000000"} size={26} />
-        </TouchableHighlight>
-      </SafeAreaView>
-    );
-  }
+/*
+class AddBill extends React.Component{
+	constructor(props) {
+		super(props);
+		this.changeDate = this.changeDate.bind(this);
+		this.toggleDatePicker = this.toggleDatePicker.bind(this);
+		this.toggleModal = this.toggleModal.bind(this);
+		this.switchLendeeMode = this.switchLendeeMode.bind(this);
+		this.addData = this.addData.bind(this);
+		this.toggleSelect = this.toggleSelect.bind(this);
+		this.deleteLendee = this.deleteLendee.bind(this);
+		this.switchBillFormat = this.switchBillFormat.bind(this);
+		this.onModalSubmit = this.onModalSubmit.bind(this);
+	}
+	state = {
+		date : today,
+		dateFull : {y,m,d},
+		datePicker : false,
+		dateObj : dateObj,
+		modalActive : false,
+		modalSwitch : "Add New Lendee",
+		dataNew : [],
+		dataExisting : [],
+		newSelected : [],
+		existingSelected : [],
+		lendeeId : [],
+		lendee_data : this.props.lendee_data,
+		billFormat : "Equal",
+	};	
 }
+*/
+
+class App extends React.Component {
+	render(){
+		return(
+			<View>
+				<Biodata/>
+			</View>
+		);
+	}
+}
+
 export default App;
