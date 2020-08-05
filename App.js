@@ -1,21 +1,56 @@
-import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React from "react";
+import {
+  Text,
+  View,
+  SafeAreaView,
+  Button,
+  TouchableHighlight,
+} from "react-native";
+import { Biodata } from "./components/Biodata";
+import { FoodEaten } from "./components/Food";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import DateTimePicker from "@react-native-community/datetimepicker";
+import Modal from "react-native-modal";
 
-export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
+class App extends React.Component {
+  state = {
+    modalActive: false,
+    text: "",
+  };
+  toggleModal(modalActive) {
+    this.setState({ modalActive: modalActive });
+  }
+  pushText() {
+    let text = this.state.text;
+    text += "cekrek ";
+    this.setState({ text });
+  }
+  render() {
+    let data = {
+      nama: "Alwan",
+      umur: 19,
+    };
+    return (
+      <SafeAreaView>
+        <Biodata data={data} />
+        <FoodEaten />
+        <Text>{`Your log : ${this.state.text}`}</Text>
+        <Modal
+          isVisible={this.state.modalActive}
+          onBackdropPress={() => this.toggleModal(false)}
+        >
+          <Text>YEY MODALNYA KEBUKA!</Text>
+          <Button
+            onPress={() => this.toggleModal(false)}
+            title={"Tutup Modal"}
+          />
+        </Modal>
+        <Button onPress={() => this.toggleModal(true)} title={"Buka Modal"} />
+        <TouchableHighlight onPress={() => this.pushText()}>
+          <MaterialCommunityIcons name='camera' color={"#000000"} size={26} />
+        </TouchableHighlight>
+      </SafeAreaView>
+    );
+  }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+export default App;
