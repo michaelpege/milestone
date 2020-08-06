@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import {
   Text,
   View,
@@ -9,9 +9,11 @@ import {
 } from "react-native";
 import { Biodata } from "./components/Biodata";
 import { FoodEaten } from "./components/Food";
+import { Statistic } from "./components/statistic";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import Modal from "react-native-modal";
+import { ProgressBar } from "./components/statistic";
 
 /*
 class AddBill extends React.Component{
@@ -46,13 +48,18 @@ class AddBill extends React.Component{
 */
 
 class App extends React.Component {
-	render(){
-		return(
-			<View>
-				<Biodata/>
-			</View>
-		);
-	}
+  state = {
+    modalActive: false,
+    text: "",
+  };
+  render() {
+    return (
+      <SafeAreaView>
+        <Biodata />
+        <Statistic />
+      </SafeAreaView>
+    );
+  }
 }
 
 export default App;
