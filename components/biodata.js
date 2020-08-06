@@ -1,10 +1,26 @@
 import React, { Component } from "react";
-import { StyleSheet, Text, View, TouchableHighlight } from "react-native";
+import { 
+  StyleSheet,
+  Text, 
+  View, 
+  TouchableHighlight, 
+  TextInput, 
+  TouchableOpacity,
+} from "react-native";
 import Modal from "react-native-modal";
 import { dimension, color } from "../assets/style";
 import { Formik } from "formik";
 import * as yup from "yup";
 import DateTimePicker from "@react-native-community/datetimepicker";
+
+const bio = {
+  gender: "Male",
+  birthDate: "01/01/2000",
+  weight: "57",
+  height: "170",
+  bmi: "20.1",
+  allergies: ["Nuts", "Seafood"],
+}
 
 class Biodata extends React.Component {
   constructor(props) {
@@ -13,14 +29,6 @@ class Biodata extends React.Component {
   }
 
   state = {
-    bio: {
-      gender: "Male",
-      birthDate: "01/01/2000",
-      weight: "57",
-      height: "170",
-      bmi: "20.1",
-      allergies: ["Nuts", "Seafood"],
-    },
     modalVisible: false,
   };
 
@@ -30,7 +38,6 @@ class Biodata extends React.Component {
   }
 
   render() {
-    let bio = this.state.bio;
     return (
       <View style={styles.centeredView}>
         <Text>Your Data : </Text>
@@ -91,16 +98,15 @@ class BiodataModal extends React.Component {
     return (
       <View style={styles.centeredView}>
         <View style={styles.modalView}>
-          <Text style={styles.modalText}>
-            {`Gender : ${bio.gender}\n
-			Birthdate : ${bio.birthDate}\n
-			Weight : ${bio.weight}\n
-			Height : ${bio.height}\n
-			BMI : ${bio.bmi}\n
-			Allergies : ${bio.allergies}`}
-          </Text>
-          <TouchableHighlight
-            style={styles.openButton}
+          <BioForm title='Gender' content={bio.gender}/>
+          <BioForm title='Birthdate' content={bio.birthDate}/>
+          <BioForm title='Body Weight' content={bio.weight}/>
+          <BioForm title='Body Height' content={bio.height}/>
+          <BioForm title='BMI' content={bio.bmi}/>
+          <TouchableHighlight stype={styles.openButton}>
+            <Text style={styles.textStyle}>{`Save`}</Text>
+          </TouchableHighlight>
+          <TouchableHighlight style={styles.openButton}
             onPress={() => this.props.setModalVisible(!this.props.visible)}
           >
             <Text style={styles.textStyle}>{`Close`}</Text>
@@ -121,6 +127,19 @@ class BioItem extends React.Component {
     );
   }
 }
+
+class BioForm extends React.Component {
+  render(){
+    return(
+      <View style={styles.bioForm}>
+        <Text style={styles.bioFormTitle}>{`${this.props.title}:`}>
+          <TextInput style={styles.bioFormInput} placeholder={this.props.content}/>
+        </Text>
+      </View>
+    );
+  }
+}
+
 
 const styles = StyleSheet.create({
   centeredView: {
@@ -203,6 +222,20 @@ const styles = StyleSheet.create({
   modalText: {
     marginBottom: 15,
     textAlign: "center",
+  },
+  bioFormTitle: {
+    flex: 1
+  },
+  bioFormInput: {
+    flex: 2
+  },
+  bioForm: {
+    alignSelf: "stretch",
+    height: 40,
+    marginBottom: 30,
+    color: "#fff",
+    borderBottomColor: "#f8f8f8",
+    borderBottomWidth: 1,
   },
 });
 
