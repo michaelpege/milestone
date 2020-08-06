@@ -98,27 +98,53 @@ class Statistic extends React.Component {
 class ProgressBar extends React.Component {
   render() {
     return (
-      <View styles={[styles.bingkai]}>
-        <View styles={styles.statis}></View>
-        <View
-          styles={[
-            styles.progressBar,
-            { width: this.props.value / this.props.max + "%" },
-          ]}
-        ></View>
+      <View>
+        <Text> TEST 1</Text>
+        <ProgressBar values={"10%"} />
+        <ProgressBar values={"75%"} />
+        <ProgressBar values={"40%"} />
+        <ProgressBar values={"100%"} />
+        <ProgressBar values={"20%"} />
+      </View>
+    );
+  }
+}
+
+class ProgressBar extends React.Component {
+  render() {
+    return (
+      <View style={styles.bingkai}>
+        <View style={styles.statis}></View>
+        <View style={[styles.progressBar, { width: this.props.values }]}></View>
       </View>
     );
   }
 }
 
 const styles = StyleSheet.create({
-  progressRow: {
+  bingkai: {
     width: "100%",
     height: 50,
+    backgroundColor: "#f7f7f7",
+    marginBottom: 5,
+    position: "relative",
   },
-  progressRowActive: {
-    backgroundColor: "red",
+  statis: {
+    width: "100%",
+    height: 50,
+    backgroundColor: "#EBEBEB",
+    position: "absolute",
+    zIndex: 1,
+  },
+  progressBar: {
+    width: "40%",
+    height: 50,
+    backgroundColor: "#0a916b",
+    zIndex: 2,
+    position: "absolute",
+    top: 0,
+    left: 0,
   },
 });
 
-export { Statistic };
+export { Statistic, ProgressBar };
