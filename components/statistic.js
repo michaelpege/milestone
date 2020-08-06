@@ -46,30 +46,66 @@ const foodEaten = [
 class Statistic extends React.Component {
   constructor(props) {
     super(props);
+    this.cariProperti = this.cariProperti.bind(this);
+    this.hitungProgress = this.hitungProgress.bind(this);
   }
 
   state = {
-    progressCalories: 500,
-    caloriesNeeded: akg.cal,
+    progress: {
+      cal: 0,
+      carbs: 0,
+      fat: 0,
+      fiber: 0,
+      protein: 0,
+    },
+    akg: akg,
   };
   // --> dataMakanan [{id:..,qty:..}]
   // --> {cal, carbs, fat, fiber, protein}
-  hitungProgress(dataMakanan, dataAKG) {
-    //ngitung Asupan - AKG
+  hitungProgress(dataMakanan) {
+    let result = { cal: 0, carbs: 0, fat: 0, fiber: 0, protein: 0 };
+    dataMakanan.map((row) => {
+      let data = this.cariProperti(row);
+      result.cal += data.cal;
+      result.carbs += data.carbs;
+      result.fat += data.fat;
+      result.fiber += data.fiber;
+      result.protein += data.protein;
+    });
+    this.setState({ progress: result });
   }
 
-  // --> dataMakanan {id,qty}
-  // --> {cal,carbs,fat,fiber,protein}
   cariProperti(dataMakanan, database) {
-    //
+    let target = database.filter((row) => row.id == dataMakanan.id)[0];
+    let result = {
+      cal: target.cal * dataMakanan.qty,
+      carbs: target.carbs * dataMakanan.qty,
+      fat: target.fat * dataMakanan.qty,
+      fiber: target.fiber * dataMakanan.qty,
+      protein: target.protein * dataMakanan.qty,
+    };
+    return result;
   }
 
   render() {
     let panjang = this.state.progressCalories / this.state.caloriesNeeded + "%";
+    let data = [a, b, c, d, e, f];
+    let component = data.map((row) => <Text>{row}</Text>);
+    return <View>{component}</View>;
+  }
+}
+
+class ProgressBar extends React.Component {
+  render() {
     return (
-      <View style={[styles.progressRow, styles.progressRowActive]}>
-        <View style={{ width: panjang }}></View>
-        <Text>Ini bagian statistik user hari ini</Text>
+      <View styles={[styles.bingkai]}>
+        <View styles={styles.statis}></View>
+        <View
+          styles={[
+            styles.progressBar,
+            { width: this.props.value / this.props.max + "%" },
+          ]}
+        ></View>
       </View>
     );
   }
