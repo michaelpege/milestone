@@ -89,22 +89,19 @@ class Statistic extends React.Component {
 
   render() {
     let panjang = this.state.progressCalories / this.state.caloriesNeeded + "%";
-    let data = [a, b, c, d, e, f];
+    let data = ["a", "b", "c", "d"];
     let component = data.map((row) => <Text>{row}</Text>);
-    return <View>{component}</View>;
-  }
-}
-
-class ProgressBar extends React.Component {
-  render() {
     return (
       <View>
-        <Text> TEST 1</Text>
-        <ProgressBar values={"10%"} />
-        <ProgressBar values={"75%"} />
-        <ProgressBar values={"40%"} />
-        <ProgressBar values={"100%"} />
-        <ProgressBar values={"20%"} />
+        {component}
+        <View>
+          <Text> TEST 1</Text>
+          <ProgressBar values={"10%"} />
+          <ProgressBar values={"75%"} />
+          <ProgressBar values={"40%"} />
+          <ProgressBar values={"100%"} />
+          <ProgressBar values={"20%"} />
+        </View>
       </View>
     );
   }
