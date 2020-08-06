@@ -39,6 +39,13 @@ class FoodRecomendation extends React.Component {
 
 export { FoodEaten, FoodRecomendation };
 
+const styles = StyleSheet.create({
+  container : {
+    marginTop: 50,
+  },
+
+});
+
 
 
 
