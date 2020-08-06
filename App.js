@@ -10,6 +10,7 @@ import {
 import { Biodata } from "./components/Biodata";
 import { FoodEaten } from "./components/Food";
 import { Statistic } from "./components/statistic";
+import { FoodRecomendation} from "./components/Food";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import Modal from "react-native-modal";
@@ -55,6 +56,8 @@ class App extends React.Component {
   render() {
     return (
       <SafeAreaView>
+		<FoodEaten/>
+		<FoodRecomendation/>
         <Biodata />
         <Statistic />
       </SafeAreaView>

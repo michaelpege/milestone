@@ -1,6 +1,7 @@
 import React from "react";
 import { StyleSheet, Text, View,ScrollView} from "react-native";
-
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import { color } from "../assets/style";
 
 const food = [
   {
@@ -38,23 +39,18 @@ class Food extends React.Component {
 class FoodEaten extends React.Component {
   render() {
     return (
-      
-      <ScrollView>
-      <Text style={{ fontWeight: 'bold', fontSize : 20, marginLeft: 50}}>Food Consumed</Text>
-      <Text>{"\n"}</Text>
-      <View>
-        <View style={{ width : 300, height : 400,borderRadius:8,marginLeft:50,marginRight :50, backgroundColor : 'powderblue'}}> 
-          <View style={{ flexDirection:"row",width : 250, height : 50,borderRadius:8, marginLeft:25,marginRight :25, marginTop : 20,backgroundColor : 'steelblue'}}>
-            <View style={{flex:5,marginTop:12,marginLeft:10}}>
-              <Text style={{fontWeight: 'bold'}}>Chicken Breast</Text>
-            </View>
-            <View style={{flex:3,height:50,width:100,backgroundColor:'white',borderRadius:8,alignSelf : 'flex-end'}}>
-
+     <View style={styles.container}>
+        <Text>{"\n"}</Text>
+        <ScrollView>
+        <Text style={{ fontWeight: 'bold', fontSize : 20, marginLeft: 50}}>Food Consumed</Text>
+        <Text>{"\n"}</Text>
+          <View>
+            <View style={styles.containerIn}> 
+              <FoodRow/>
             </View>
           </View>
-        </View>
-      </View>
-      </ScrollView>
+          </ScrollView>
+      </View> 
     );
   }
 }
@@ -63,26 +59,86 @@ class FoodRecomendation extends React.Component {
   render() {
     
     return (
-      <View>
-        <Text>Ini bagian makanan yang direkomendasikan</Text>
-      </View>
+      <View style={styles.container}>
+        <ScrollView>
+          <Text>{"\n"}</Text>
+          <Text style={{ fontWeight: 'bold', fontSize : 20, marginLeft: 50}}>Recommendations</Text>
+          <Text>{"\n"}</Text>
+          <View>
+            <View style={styles.containerIn}> 
+            </View>
+          </View>
+        </ScrollView>
+    </View> 
     );
   }
 }
 
 class FoodRow extends React.Component {
   render() {
-    let qty = this.props.qty ? <Text>{"x" + this.props.qty}</Text> : "";
-    return (
-      <View style={styles.foodRow}>
-        <View style={styles.foodName}>{qty}</View>
-        <View styles={styles.foodOptions}></View>
+    return(
+    <View style={styles.row}>
+      <View style={styles.feature}>
+        <Text style={{fontWeight: 'bold'}}>Chicken Breast</Text>
       </View>
-    );
+      <View style={styles.whiterow}>
+        <MaterialCommunityIcons style ={{flex:1,marginLeft:20,paddingRight:20}}
+          name='pencil'
+          color = {color.white}
+          size={20}
+        />
+        <MaterialCommunityIcons style ={{flex:2}}
+          name='close'
+          color = {color.white}
+          size={20}
+        />
+      </View>
+    </View>
+
+    )
+    
+    
   }
 }
 
 const styles = StyleSheet.create({
+  container: {
+    backgroundColor : "white",
+    flexDirection : "column"
+  },
+  containerIn:{
+    width : 300, 
+    height : 400,
+    borderRadius:8,
+    marginLeft:50,
+    marginRight :50, 
+    backgroundColor : 'powderblue',
+  },
+  row: {
+     flexDirection:"row",
+      width : 250, 
+      height : 50,
+      borderRadius:8, 
+      marginLeft:25,
+      marginRight :25, 
+      marginTop : 20,
+      backgroundColor : 'steelblue',
+  },
+  feature: {
+    flex:5,
+    marginTop:12,
+    marginLeft:10,
+  },
+  whiterow : {
+    flex:3,
+    height:50,
+    width:"100%",
+    backgroundColor:'white',
+    borderRadius:8,alignSelf : 'flex-end',
+    flexDirection:"row",
+    alignItems:"center",
+    justifyContent:"center",
+  },
   foodRow: {
     flexDirection: "row",
     width: "100%",
@@ -91,16 +147,12 @@ const styles = StyleSheet.create({
   foodName: {
     flex: 3,
   },
+  
 });
 
 export { FoodEaten, FoodRecomendation };
 
-const styles = StyleSheet.create({
-  container : {
-    marginTop: 50,
-  },
 
-});
 
 
 
