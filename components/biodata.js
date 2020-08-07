@@ -11,6 +11,15 @@ import { dimension, color } from "../assets/style";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
+const bio = {
+  gender: "Male",
+  birthDate: "01/01/2000",
+  weight: "57",
+  height: "170",
+  bmi: "20.1",
+  allergies: ["Nuts", "Seafood"],
+};
+
 class Biodata extends React.Component {
   constructor(props) {
     super(props);
@@ -22,7 +31,6 @@ class Biodata extends React.Component {
   };
 
   render() {
-    let bio = this.state.bio;
     return (
       <View style={styles.centeredView}>
         <Text>Your Data : </Text>
@@ -89,17 +97,17 @@ class BiodataModal extends React.Component {
     return (
       <View style={styles.centeredView}>
         <View style={styles.modalView}>
-          <Text style={styles.modalText}>
-            {`Gender : ${bio.gender}\n
-			Birthdate : ${bio.birthDate}\n
-			Weight : ${bio.weight}\n
-			Height : ${bio.height}\n
-			BMI : ${bio.bmi}\n
-			Allergies : ${bio.allergies}`}
-          </Text>
+          <BioForm title='Gender' content={bio.gender} />
+          <BioForm title='Birthdate' content={bio.birthDate} />
+          <BioForm title='Body Weight' content={bio.weight} />
+          <BioForm title='Body Height' content={bio.height} />
+          <BioForm title='BMI' content={bio.bmi} />
+          <TouchableHighlight stype={styles.openButton}>
+            <Text style={styles.textStyle}>{`Save`}</Text>
+          </TouchableHighlight>
           <TouchableHighlight
             style={styles.openButton}
-            onPress={() => this.props.setModalVisible(false, "Biodata")}
+            onPress={() => this.props.setModalVisible(!this.props.visible)}
           >
             <Text style={styles.textStyle}>{`Close`}</Text>
           </TouchableHighlight>
@@ -296,6 +304,20 @@ const styles = StyleSheet.create({
   modalText: {
     marginBottom: 15,
     textAlign: "center",
+  },
+  bioFormTitle: {
+    flex: 1,
+  },
+  bioFormInput: {
+    flex: 2,
+  },
+  bioForm: {
+    alignSelf: "stretch",
+    height: 40,
+    marginBottom: 30,
+    color: "#fff",
+    borderBottomColor: "#f8f8f8",
+    borderBottomWidth: 1,
   },
 });
 
