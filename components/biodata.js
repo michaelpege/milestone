@@ -5,6 +5,7 @@ import {
   View,
   TouchableHighlight,
   FlatList,
+  TextInput,
 } from "react-native";
 import Modal from "react-native-modal";
 import { dimension, color } from "../assets/style";
@@ -124,6 +125,22 @@ class BioItem extends React.Component {
       <View style={[styles.bioItem, { flex: this.props.flex || 1 }]}>
         <Text style={styles.bioTitle}>{this.props.title}</Text>
         <Text style={styles.bioContent}>{this.props.content}</Text>
+      </View>
+    );
+  }
+}
+
+class BioForm extends React.Component {
+  render() {
+    return (
+      <View style={styles.bioForm}>
+        <Text style={styles.bioFormTitle}>
+          {`${this.props.title}:`}>
+          <TextInput
+            style={styles.bioFormInput}
+            placeholder={this.props.content}
+          />
+        </Text>
       </View>
     );
   }
