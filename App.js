@@ -65,7 +65,9 @@ class App extends React.Component {
           padding: 20,
         }}
       >
-        <Biodata bio={this.state.bio} setModalVisible={this.setModalVisible} />
+        <FoodEaten eat = {this.state.eat} features = {this.features}/>
+        <FoodRecomendation/>
+        <Biodata bio={this.state.bio} setModalVisible={this.setModalVisible }/>
         <Modal
           isVisible={this.state.modalVisible}
           onBackdropPress={() => this.setModalVisible(false)}
