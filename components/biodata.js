@@ -88,21 +88,29 @@ class BiodataModal extends React.Component {
   constructor(props) {
     super(props);
     this.handleChange = this.handleChange.bind(this);
+    this.formChange = this.formChange.bind(this);
   }
   state = {
     bio: this.props.bio,
   };
   handleChange() {}
+  formChange(text, title){
+    if (title==="Gender") this.state.bio.gender = text;
+    else if (title==="Birthdate") this.state.bio.birthDate = text;
+    else if (title==="Body Weight") this.state.bio.weight = text;
+    else if (title==="Body Height") this.state.bio.height = text;
+    else this.state.bio.bmi = text;
+    console.log(this.state);
+  }
   render() {
     let bio = this.props.bio;
     return (
       <View style={styles.centeredView}>
         <View style={styles.modalView}>
-          <BioForm title='Gender' content={bio.gender} />
-          <BioForm title='Birthdate' content={bio.birthDate} />
-          <BioForm title='Body Weight' content={bio.weight} />
-          <BioForm title='Body Height' content={bio.height} />
-          <BioForm title='BMI' content={bio.bmi} />
+          <BioForm title='Gender' content={bio.gender} onChange={this.formChange} />
+          <BioForm title='Birthdate' content={bio.birthDate} onChange={this.formChange}/>
+          <BioForm title='Body Weight' content={bio.weight} onChange={this.formChange}/>
+          <BioForm title='Body Height' content={bio.height} onChange={this.formChange}/>
           <TouchableHighlight stype={styles.openButton}>
             <Text style={styles.textStyle}>{`Save`}</Text>
           </TouchableHighlight>
@@ -139,6 +147,7 @@ class BioForm extends React.Component {
           <TextInput
             style={styles.bioFormInput}
             placeholder={this.props.content}
+            onChangeText={text => this.props.onChange(text,this.props.title)}
           />
         </Text>
       </View>
