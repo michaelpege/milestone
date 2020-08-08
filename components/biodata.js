@@ -12,15 +12,6 @@ import { dimension, color } from "../assets/style";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
-const bio = {
-  gender: "Male",
-  birthDate: "01/01/2000",
-  weight: "57",
-  height: "170",
-  bmi: "20.1",
-  allergies: ["Nuts", "Seafood"],
-};
-
 class Biodata extends React.Component {
   constructor(props) {
     super(props);
@@ -37,13 +28,13 @@ class Biodata extends React.Component {
         <Text>Your Data : </Text>
         <View style={styles.biodataContainer}>
           <View style={styles.bioRow}>
-            <BioItem title='Gender' content={bio.gender} />
-            <BioItem title='Birthdate' content={bio.birthDate} flex={2} />
+            <BioItem title='Gender' content={this.state.bio.gender} />
+            <BioItem title='Birthdate' content={this.state.bio.birthDate} flex={2} />
           </View>
           <View style={styles.bioRow}>
-            <BioItem title='Body Weight' content={bio.weight} />
-            <BioItem title='Body Height' content={bio.height} />
-            <BioItem title='BMI' content={bio.bmi} />
+            <BioItem title='Body Weight' content={this.state.bio.weight} />
+            <BioItem title='Body Height' content={this.state.bio.height} />
+            <BioItem title='BMI' content={this.state.bio.bmi} />
           </View>
           <View style={styles.bioRow}>
             <Text
@@ -61,7 +52,7 @@ class Biodata extends React.Component {
           <View style={[styles.bioRow]}>
             <View style={styles.innerBox}>
               <FlatList
-                data={bio.allergies}
+                data={this.state.bio.allergies}
                 renderItem={({ item }) => (
                   <Text style={{ width: "33%", margin: 10 }}>{item}</Text>
                 )}
@@ -95,34 +86,30 @@ class BiodataModal extends React.Component {
   };
   handleChange() {}
   formChange(text, title){
-    if (title==="Gender") this.state.bio.gender = text;
-    else if (title==="Birthdate") this.state.bio.birthDate = text;
-    else if (title==="Body Weight") this.state.bio.weight = text;
-    else if (title==="Body Height") this.state.bio.height = text;
-    else this.state.bio.bmi = text;
+    let bio = this.state.bio
+    if (title==="Gender") bio.gender = text
+    else if (title==="Birthdate") bio.birthDate = text;
+    else if (title==="Body Weight") bio.weight = text;
+    else if (title==="Body Height") bio.weight = text;
+    else bio.bmi = text;
+    this.setState({bio});
     console.log(this.state);
   }
   render() {
-    let bio = this.props.bio;
     return (
-      <View style={styles.centeredView}>
         <View style={styles.modalView}>
-          <BioForm title='Gender' content={bio.gender} onChange={this.formChange} />
-          <BioForm title='Birthdate' content={bio.birthDate} onChange={this.formChange}/>
-          <BioForm title='Body Weight' content={bio.weight} onChange={this.formChange}/>
-          <BioForm title='Body Height' content={bio.height} onChange={this.formChange}/>
-          <TouchableHighlight stype={styles.openButton}>
-            <Text style={styles.textStyle}>{`Save`}</Text>
-          </TouchableHighlight>
+          <BioForm title='Gender' content={this.state.bio.gender} onChange={this.formChange} />
+          <BioForm title='Birthdate' content={this.state.bio.birthDate} onChange={this.formChange}/>
+          <BioForm title='Body Weight' content={this.state.bio.weight} onChange={this.formChange}/>
+          <BioForm title='Body Height' content={this.state.bio.height} onChange={this.formChange}/>
+          <Allergies data={["Nuts", "Dairy", "Seafood", "Eggs", "Wheat"]} />
           <TouchableHighlight
             style={styles.openButton}
-            onPress={() => this.props.setModalVisible(!this.props.visible)}
+            onPress={() => this.props.updateBio(this.state.bio)}
           >
-            <Text style={styles.textStyle}>{`Close`}</Text>
+            <Text style={styles.textStyle}>{`Save`}</Text>
           </TouchableHighlight>
-          <Allergies data={["Nuts", "Dairy", "Seafood", "Eggs", "Wheat"]} />
         </View>
-      </View>
     );
   }
 }

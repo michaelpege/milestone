@@ -20,6 +20,7 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.setModalVisible = this.setModalVisible.bind(this);
+    this.updateBio = this.updateBio.bind(this);
   }
   state = {
     modalActive: false,
@@ -41,6 +42,12 @@ class App extends React.Component {
     console.log("Masuk");
     console.log(visible, type);
   }
+  updateBio(modalBio){
+    this.setState({bio: modalBio});  
+//    this.setState({modalVisible: visible});
+    this.setModalVisible(!this.state.modalVisible);
+    console.log("masuk");
+  }
   render() {
     let modalComponent = "";
     switch (this.state.modalComponent) {
@@ -50,6 +57,7 @@ class App extends React.Component {
             setModalVisible={this.setModalVisible}
             bio={this.state.bio}
             visible={this.state.modalVisible}
+            updateBio={this.updateBio}
           />
         );
         break;
@@ -67,7 +75,7 @@ class App extends React.Component {
       >
         <FoodEaten eat = {this.state.eat} features = {this.features}/>
         <FoodRecomendation/>
-        <Biodata bio={this.state.bio} setModalVisible={this.setModalVisible }/>
+        <Biodata bio={this.state.bio} setModalVisible={this.setModalVisible}/>
         <Modal
           isVisible={this.state.modalVisible}
           onBackdropPress={() => this.setModalVisible(false)}
