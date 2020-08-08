@@ -37,7 +37,32 @@ class Food extends React.Component {
 }
 
 class FoodEaten extends React.Component {
+  constructor(props) {
+    super(props);
+    this.addRow = this.addRow.bind(this);
+    this.deleteRow= this.deleteRow.bind(this);
+  }
+  state = {
+    database: food,
+    selected: [],
+  };
+  addRow(name) {
+    let selected = this.state.selected;
+    if (!selected.includes(name)) {
+      selected.push(name);
+    }
+    this.setState({ selected });
+  }
+  deleteRow(name) {
+    let selected = this.state.selected;
+    if (selected.includes(name)) {
+      selected = selected.filter((row) => row != name);
+    }
+    this.setState({ selected });
+  }
   render() {
+    let { selected, database } = this.state;
+    let notSelected = database.filter((row) => !selected.includes(row));
     return (
      <View style={styles.container}>
         <Text>{"\n"}</Text>
@@ -46,7 +71,7 @@ class FoodEaten extends React.Component {
         <Text>{"\n"}</Text>
           <View>
             <View style={styles.containerIn}> 
-              <FoodRow/>
+              <FoodRow  selected={true}/>
             </View>
           </View>
           </ScrollView>
@@ -66,6 +91,7 @@ class FoodRecomendation extends React.Component {
           <Text>{"\n"}</Text>
           <View>
             <View style={styles.containerIn}> 
+              <FoodRow selected={false}/>
             </View>
           </View>
         </ScrollView>
@@ -76,11 +102,7 @@ class FoodRecomendation extends React.Component {
 
 class FoodRow extends React.Component {
   render() {
-    return(
-    <View style={styles.row}>
-      <View style={styles.feature}>
-        <Text style={{fontWeight: 'bold'}}>Chicken Breast</Text>
-      </View>
+    let whitebar = this.props.selected ? (
       <View style={styles.whiterow}>
         <MaterialCommunityIcons style ={{flex:1,marginLeft:20,paddingRight:20}}
           name='pencil'
@@ -92,7 +114,26 @@ class FoodRow extends React.Component {
           color = {color.white}
           size={20}
         />
+      </View>)  : (
+        <View style={styles.whiterow}>
+        <MaterialCommunityIcons style ={{flex:1,marginLeft:20,paddingRight:20}}
+          name='information'
+          color = {color.white}
+          size={20}
+        />
+        <MaterialCommunityIcons style ={{flex:2}}
+          name='plus'
+          color = {color.white}
+          size={20}
+        />
       </View>
+      )
+    return(
+    <View style={styles.row}>
+      <View style={styles.feature}>
+        <Text style={{fontWeight: 'bold'}}>Chicken Breast</Text>
+      </View>
+      {whitebar}
     </View>
 
     )
