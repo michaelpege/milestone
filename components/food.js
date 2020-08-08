@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, Text, View,ScrollView} from "react-native";
+import { StyleSheet, Text, View,ScrollView, TouchableHighlight} from "react-native";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { color } from "../assets/style";
 
@@ -31,18 +31,13 @@ const food = [
 ];
 
 class Food extends React.Component {
-  state = {
-    foodEaten: this.props.foodEaten,
-  };
-}
-
-class FoodEaten extends React.Component {
   constructor(props) {
     super(props);
     this.addRow = this.addRow.bind(this);
     this.deleteRow= this.deleteRow.bind(this);
   }
   state = {
+    foodEaten: this.props.foodEaten,
     database: food,
     selected: [],
   };
@@ -60,6 +55,25 @@ class FoodEaten extends React.Component {
     }
     this.setState({ selected });
   }
+  render()
+  {
+    return(
+      <View>
+        <FoodEaten setModalVisible={this.props.setModalVisible }/>
+        <FoodRecomendation setModalVisible={this.props.setModalVisible } />
+      </View>
+    )
+  }
+  
+}
+
+class FoodEaten extends React.Component {
+ 
+  state = {
+    database: food,
+    selected: [],
+  };
+  
   render() {
     let { selected, database } = this.state;
     let notSelected = database.filter((row) => !selected.includes(row));
@@ -69,9 +83,9 @@ class FoodEaten extends React.Component {
         <ScrollView>
         <Text style={{ fontWeight: 'bold', fontSize : 20, marginLeft: 50}}>Food Consumed</Text>
         <Text>{"\n"}</Text>
-          <View>
+          <View style={{justifyContent: "center", alignItems : "center"}}>
             <View style={styles.containerIn}> 
-              <FoodRow  selected={true}/>
+              <FoodRow  selected={true} setModalVisible={this.props.setModalVisible }/>
             </View>
           </View>
           </ScrollView>
@@ -81,8 +95,13 @@ class FoodEaten extends React.Component {
 }
 
 class FoodRecomendation extends React.Component {
+  state = {
+    database: food,
+    selected: [],
+  };
   render() {
-    
+    let { selected, database } = this.state;
+    let notSelected = database.filter((row) => !selected.includes(row));
     return (
       <View style={styles.container}>
         <ScrollView>
@@ -91,7 +110,7 @@ class FoodRecomendation extends React.Component {
           <Text>{"\n"}</Text>
           <View>
             <View style={styles.containerIn}> 
-              <FoodRow selected={false}/>
+              <FoodRow selected={false} setModalVisible={this.props.setModalVisible } />
             </View>
           </View>
         </ScrollView>
@@ -104,23 +123,27 @@ class FoodRow extends React.Component {
   render() {
     let whitebar = this.props.selected ? (
       <View style={styles.whiterow}>
-        <MaterialCommunityIcons style ={{flex:1,marginLeft:20,paddingRight:20}}
-          name='pencil'
-          color = {color.white}
-          size={20}
-        />
-        <MaterialCommunityIcons style ={{flex:2}}
-          name='close'
-          color = {color.white}
-          size={20}
-        />
+        <TouchableHighlight  onPress = {()=>this.props.setModalVisible(true,'Food')}>
+          <MaterialCommunityIcons style ={{flex:1,marginLeft:20,paddingRight:20}}
+            name='pencil'
+            color = {color.white}
+            size={20}
+          />
+        </TouchableHighlight>
+          <MaterialCommunityIcons style ={{flex:2}}
+            name='close'
+            color = {color.white}
+            size={20}
+          />
       </View>)  : (
         <View style={styles.whiterow}>
+        <TouchableHighlight  onPress = {()=>this.props.setModalVisible(true,'Food')}>
         <MaterialCommunityIcons style ={{flex:1,marginLeft:20,paddingRight:20}}
           name='information'
           color = {color.white}
           size={20}
         />
+        </TouchableHighlight>
         <MaterialCommunityIcons style ={{flex:2}}
           name='plus'
           color = {color.white}
@@ -137,14 +160,24 @@ class FoodRow extends React.Component {
     </View>
 
     )
-    
-    
+  }
+}
+
+class FoodModal extends React.Component {
+  
+  render()
+  {
+    return(
+      <View style={styles.modalbox}>
+
+      </View>
+    )
   }
 }
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor : "white",
+    backgroundColor : "grey",
     flexDirection : "column"
   },
   containerIn:{
@@ -188,10 +221,17 @@ const styles = StyleSheet.create({
   foodName: {
     flex: 3,
   },
-  
+  modalbox: {
+    backgroundColor : 'white',
+    width : 300,
+    height : 400,
+    alignItems : "center",
+    justifyContent:"center",
+    borderRadius : 7,
+  },
 });
 
-export { FoodEaten, FoodRecomendation };
+export { Food,FoodEaten, FoodRecomendation,FoodModal };
 
 
 

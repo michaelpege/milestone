@@ -8,9 +8,10 @@ import {
   StyleSheet,
 } from "react-native";
 import { Biodata, BiodataModal } from "./components/Biodata";
-import { FoodEaten } from "./components/Food";
+import { FoodEaten,Food } from "./components/Food";
 import { Statistic } from "./components/statistic";
-import { FoodRecomendation } from "./components/Food";
+import { FoodRecomendation,FoodModal } from "./components/Food";
+
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import Modal from "react-native-modal";
@@ -53,6 +54,14 @@ class App extends React.Component {
           />
         );
         break;
+      case "Food" :
+        modalComponent = (
+          <FoodModal 
+            setModalVisible={this.setModalVisible}
+            visible={this.state.modalVisible}
+          />
+        );
+        break;
     }
     return (
       <SafeAreaView
@@ -65,8 +74,7 @@ class App extends React.Component {
           padding: 20,
         }}
       >
-        <FoodEaten eat = {this.state.eat} features = {this.features}/>
-        <FoodRecomendation/>
+        <Food  features = {this.features} setModalVisible={this.setModalVisible }/>
         <Biodata bio={this.state.bio} setModalVisible={this.setModalVisible }/>
         <Modal
           isVisible={this.state.modalVisible}
