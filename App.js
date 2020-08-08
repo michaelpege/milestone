@@ -21,6 +21,7 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.setModalVisible = this.setModalVisible.bind(this);
+    this.updateBio = this.updateBio.bind(this);
   }
   state = {
     modalActive: false,
@@ -33,7 +34,7 @@ class App extends React.Component {
       weight: "57",
       height: "170",
       bmi: "20.1",
-      allergies: ["Nuts", "Seafood"],
+      Allergies: ["Nuts", "Seafood"],
     },
   };
   setModalVisible(visible, type) {
@@ -41,6 +42,12 @@ class App extends React.Component {
     this.setState({ modalVisible: visible, modalComponent: type });
     console.log("Masuk");
     console.log(visible, type);
+  }
+  updateBio(modalBio){
+    this.setState({bio: modalBio});  
+//    this.setState({modalVisible: visible});
+    this.setModalVisible(!this.state.modalVisible);
+    console.log("masuk");
   }
   render() {
     let modalComponent = "";
@@ -51,6 +58,7 @@ class App extends React.Component {
             setModalVisible={this.setModalVisible}
             bio={this.state.bio}
             visible={this.state.modalVisible}
+            updateBio={this.updateBio}
           />
         );
         break;
