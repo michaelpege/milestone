@@ -184,29 +184,68 @@ class FoodRow extends React.Component {
 }
 
 class FoodModal extends React.Component {
+  state = {
+    qty: this.props.data.qty || 0,
+  };
+  editQty(inc) {
+    let qty = this.state.qty;
+    qty += inc;
+    this.setState({ qty });
+  }
   render() {
     let { data } = this.props;
     let qtyComponent = this.props.info ? (
-      ""
+      []
     ) : (
       <View style={styles.modalRow}>
         <Text style={styles.txt}>Qty :</Text>
-        <View style={{ flex: 1, alignSelf: "flex-end" }}>
+        <View style={{ flex: 1, alignSelf: "flex-end", flexDirection: "row" }}>
           <TouchableHighlight
-            onPress={() => this.props.editRow(data.id, data.qty - 1)}
+            onPress={() => this.editQty(-1)}
             style={{ flex: 1 }}
           >
             <Text style={{ color: color.p_teal }}>-</Text>
           </TouchableHighlight>
-          <Text style={{ flex: 1 }}>{data.qty}</Text>
+          <Text style={{ flex: 1 }}>{this.state.qty}</Text>
           <TouchableHighlight
-            onPress={() => this.props.editRow(data.id, data.qty + 1)}
+            onPress={() => this.editQty(1)}
             style={{ flex: 1 }}
           >
             <Text style={{ color: color.p_teal }}>+</Text>
           </TouchableHighlight>
         </View>
       </View>
+    );
+    let submitButton = this.props.info ? (
+      <TouchableHighlight
+        style={styles.savebox}
+        onPress={() => this.props.setModalVisible(false)}
+      >
+        <Text
+          style={{
+            alignSelf: "center",
+            fontWeight: "bold",
+            color: "white",
+          }}
+        >
+          Ok, Cool!
+        </Text>
+      </TouchableHighlight>
+    ) : (
+      <TouchableHighlight
+        style={styles.savebox}
+        onPress={() => this.props.editRow(data.id, this.state.qty)}
+      >
+        <Text
+          style={{
+            alignSelf: "center",
+            fontWeight: "bold",
+            color: "white",
+          }}
+        >
+          {this.props.info ? "Ok, Cool!" : "Save changes"}
+        </Text>
+      </TouchableHighlight>
     );
     return (
       <View style={styles.modalbox}>
@@ -249,20 +288,7 @@ class FoodModal extends React.Component {
             {data.fiber + "g"}
           </Text>
         </View>
-        <TouchableHighlight
-          style={styles.savebox}
-          onPress={() => this.props.setModalVisible(false)}
-        >
-          <Text
-            style={{
-              alignSelf: "center",
-              fontWeight: "bold",
-              color: "white",
-            }}
-          >
-            Ok, Cool!
-          </Text>
-        </TouchableHighlight>
+        {submitButton}
       </View>
     );
   }

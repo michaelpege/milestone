@@ -106,12 +106,12 @@ class BiodataModal extends React.Component {
 
   formChange(text, title) {
     let bio = this.state.bio;
-    console.log(text);
+    // console.log(text);
     if (title === "Gender") bio.gender = text;
     else if (title === "Body Weight") bio.weight = text;
     else bio.height = text;
     this.setState({ bio });
-    console.log(this.state);
+    // console.log(this.state);
   }
 
   toggleDatePicker() {
@@ -155,9 +155,9 @@ class BiodataModal extends React.Component {
     date = this.formatDate(date);
     bio.birthDate = date.dateVisual;
     bio.birthDateObj = date.dateObj;
-    console.log("Date changed..");
-    console.log(date);
-    console.log(bio);
+    // console.log("Date changed..");
+    // console.log(date);
+    // console.log(bio);
     this.setState({
       datePickerVisible: false,
       bio,
@@ -165,8 +165,8 @@ class BiodataModal extends React.Component {
   }
 
   toggleAllergy(name) {
-    console.log("Toggle allergy");
-    console.log(name);
+    // console.log("Toggle allergy");
+    // console.log(name);
     let bio = this.state.bio;
     let allergyData = bio.allergies;
     if (allergyData.includes(name)) {
@@ -311,8 +311,8 @@ class Allergies extends React.Component {
   render() {
     let { selected, database } = this.props;
     let notSelected = database.filter((row) => !selected.includes(row));
-    console.log("Ini list allergynya");
-    console.log(selected, notSelected);
+    // console.log("Ini list allergynya");
+    // console.log(selected, notSelected);
     let selectedAllergies = selected.map((row) => (
       <AllergyRow
         name={row}

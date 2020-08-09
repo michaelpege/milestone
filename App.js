@@ -142,6 +142,7 @@ class App extends React.Component {
             visible={this.state.modalVisible}
             data={this.state.modalData}
             info={false}
+            editRow={this.editFoodRow}
           />
         );
         break;
@@ -174,7 +175,7 @@ class App extends React.Component {
     this.setState({ selected });
   }
 
-  editFoodRow(id, qty, data) {
+  editFoodRow(id, qty) {
     let selected = this.state.selected;
     let target = selected.filter((row) => row.id == id);
     if (target.length) {
@@ -186,6 +187,7 @@ class App extends React.Component {
       selected = selected.map((row) => (row.id == id ? target : row));
       this.setState({ selected });
     }
+    this.setModalVisible(false);
   }
 
   render() {
