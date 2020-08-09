@@ -7,12 +7,12 @@ import {
   TouchableHighlight,
 } from "react-native";
 import { Biodata, BiodataModal } from "./components/biodata";
-import { FoodModal,FoodInfo } from "./components/food";
-import { FoodEaten,Food,FoodRecomendation } from "./components/Food";
+import { FoodModal, FoodInfo, Food } from "./components/food";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import Modal from "react-native-modal";
 import { color, stylesGlobal } from "./assets/style";
+import { foodDatabase } from "./assets/foodData";
 
 const allergiesDB = ["Nuts", "Dairy", "Seafood", "Eggs", "Wheat"];
 
@@ -30,6 +30,7 @@ class App extends React.Component {
     modalActive: false,
     modalComponent: "Biodata",
     modalVisible: false,
+    modalData: {},
     datePickerVisible: false,
     dateObj: new Date(),
     dateVisual: "",
@@ -41,6 +42,13 @@ class App extends React.Component {
       height: "170",
       bmi: "20.1",
       allergies: ["Nuts", "Seafood"],
+    },
+    akg: {
+      carbs: 0,
+      cal: 0,
+      fat: 0,
+      fiber: 0,
+      protein: 0,
     },
   };
 
@@ -80,10 +88,12 @@ class App extends React.Component {
     return { dateObj, dateVisual };
   }
 
-  setModalVisible(visible, type) {
+  setModalVisible(visible, type, data) {
     let target =
       type == "" || type == undefined ? this.state.modalComponent : type;
-    this.setState({ modalVisible: visible, modalComponent: target });
+    let modalData =
+      data == "" || data == undefined ? this.state.modalData : data;
+    this.setState({ modalVisible: visible, modalComponent: target, modalData });
     console.log(visible, type);
   }
 
@@ -126,6 +136,7 @@ class App extends React.Component {
           <FoodModal
             setModalVisible={this.setModalVisible}
             visible={this.state.modalVisible}
+            data={this.state.modalData}
           />
         );
         break;
@@ -134,10 +145,9 @@ class App extends React.Component {
           <FoodInfo
             setModalVisible={this.setModalVisible}
             visible={this.state.modalVisible}
+            data={this.state.modalData}
           />
         );
-      
-      
     }
     return modalComponent;
   }
@@ -156,8 +166,8 @@ class App extends React.Component {
           paddingHorizontal: 30,
         }}
       >
-        <ScrollView>
-          <View style={stylesGlobal.container}>
+        <View style={stylesGlobal.container}>
+          <ScrollView>
             <AppTitle />
             <View
               style={{
@@ -194,6 +204,10 @@ class App extends React.Component {
               setModalVisible={this.setModalVisible}
               formatDate={this.formatDate}
             />
+            <Food
+              setModalVisible={this.setModalVisible}
+              foodDB={foodDatabase}
+            />
             <View style={{ marginVertical: 20 }}></View>
             <Modal
               isVisible={this.state.modalVisible}
@@ -218,10 +232,8 @@ class App extends React.Component {
                 onChange={this.changeDate}
               />
             )}
-          </View>
-        </ScrollView>
-        <Food setModalVisible={this.setModalVisible }/>
-        
+          </ScrollView>
+        </View>
       </SafeAreaView>
     );
   }
