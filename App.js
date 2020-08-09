@@ -7,9 +7,17 @@ import {
   ScrollView,
   TouchableHighlight,
 } from "react-native";
+<<<<<<< HEAD
 import { Biodata, BiodataModal } from "./components/biodata";
 import { FoodEaten, FoodRecomendation } from "./components/food";
 import { Statistic } from "./components/statistic";
+=======
+import { Biodata, BiodataModal } from "./components/Biodata";
+import { FoodEaten,Food } from "./components/Food";
+import { Statistic } from "./components/statistic";
+import { FoodRecomendation,FoodModal } from "./components/Food";
+
+>>>>>>> d4fb27fe7701f035c909fb72556ea78ebad3fbd2
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import Modal from "react-native-modal";
@@ -19,6 +27,7 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.setModalVisible = this.setModalVisible.bind(this);
+    this.updateBio = this.updateBio.bind(this);
   }
   state = {
     modalActive: false,
@@ -31,7 +40,7 @@ class App extends React.Component {
       weight: "57",
       height: "170",
       bmi: "20.1",
-      allergies: ["Nuts", "Seafood"],
+      Allergies: ["Nuts", "Seafood"],
     },
   };
   setModalVisible(visible, type) {
@@ -39,6 +48,12 @@ class App extends React.Component {
     this.setState({ modalVisible: visible, modalComponent: type });
     console.log("Masuk");
     console.log(visible, type);
+  }
+  updateBio(modalBio){
+    this.setState({bio: modalBio});  
+//    this.setState({modalVisible: visible});
+    this.setModalVisible(!this.state.modalVisible);
+    console.log("masuk");
   }
   render() {
     let modalComponent = "";
@@ -48,6 +63,15 @@ class App extends React.Component {
           <BiodataModal
             setModalVisible={this.setModalVisible}
             bio={this.state.bio}
+            visible={this.state.modalVisible}
+            updateBio={this.updateBio}
+          />
+        );
+        break;
+      case "Food" :
+        modalComponent = (
+          <FoodModal 
+            setModalVisible={this.setModalVisible}
             visible={this.state.modalVisible}
           />
         );
