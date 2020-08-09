@@ -25,6 +25,7 @@ const stylesGlobal = StyleSheet.create({
     fontSize: 18,
     color: color.f_dark,
     fontWeight: "bold",
+    marginBottom: 5,
   },
   text: {
     fontSize: 14,
