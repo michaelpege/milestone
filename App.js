@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import {
-  Text,
+  Text,git pull https://www.github.com/michaelpege/milestone master --allow-unrelated-histories
   View,
   SafeAreaView,
   Button,
@@ -34,7 +34,7 @@ class App extends React.Component {
       weight: "57",
       height: "170",
       bmi: "20.1",
-      Allergies: ["Nuts", "Seafood"],
+      allergies: ["Nuts", "Seafood"],
     },
   };
   setModalVisible(visible, type) {
