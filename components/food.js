@@ -11,59 +11,24 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 import { dimension, color, stylesGlobal } from "../assets/style";
 
 class Food extends React.Component {
-  constructor(props) {
-    super(props);
-    this.addRow = this.addRow.bind(this);
-    this.deleteRow = this.deleteRow.bind(this);
-    this.editRow = this.editRow.bind(this);
-  }
-  state = {
-    foodEaten: this.props.foodEaten,
-    database: this.props.foodDB,
-    selected: [],
-  };
-  addRow(data) {
-    let { selected } = this.state;
-    if (!selected.filter((row) => row.id == data.id).length) {
-      selected.push({ ...data, qty: 0 });
-    }
-    this.setState({ selected });
-  }
-  deleteRow(data) {
-    let { selected } = this.state;
-    if (selected.filter((row) => row.id == data.id).length) {
-      selected = selected.filter((row) => row.id !== data.id);
-    }
-    this.setState({ selected });
-  }
-  editRow(id, qty) {
-    let selected = this.state.selected;
-    let target = selected.filter((row) => row.id == id);
-    if (target.length) {
-      target = target[0];
-      target.qty = qty;
-      selected = selected.map((row) => (row.id == id ? target : row));
-      this.setState({ selected });
-    }
-  }
   render() {
-    let selectedID = this.state.selected.map((row) => row.id);
-    let notSelected = this.state.database.filter(
+    let selectedID = this.props.selected.map((row) => row.id);
+    let notSelected = this.props.foodDB.filter(
       (row) => !selectedID.includes(row.id)
     );
     return (
       <View style={{ marginTop: 20 }}>
         <FoodEaten
           setModalVisible={this.props.setModalVisible}
-          data={this.state.selected}
-          editRow={this.editRow}
-          deleteRow={this.deleteRow}
+          data={this.props.selected}
+          editRow={this.props.editRow}
+          deleteRow={this.props.deleteRow}
         />
         <View style={{ marginVertical: 5 }}></View>
         <FoodRecomendation
           setModalVisible={this.props.setModalVisible}
           data={notSelected}
-          addRow={this.addRow}
+          addRow={this.props.addRow}
         />
       </View>
     );
@@ -101,10 +66,6 @@ class FoodEaten extends React.Component {
 }
 
 class FoodRecomendation extends React.Component {
-  state = {
-    database: food,
-    selected: [],
-  };
   render() {
     let { data } = this.props;
     return (
@@ -141,6 +102,12 @@ class FoodRow extends React.Component {
         <View style={styles.row}>
           <View style={styles.feature}>
             <Text style={{ fontWeight: "bold" }}>{data.name}</Text>
+            <Text
+              style={[
+                stylesGlobal.textHead,
+                { position: "absolute", right: 10 },
+              ]}
+            >{`x${data.qty}`}</Text>
           </View>
           <View style={styles.whiterow}>
             <TouchableHighlight
@@ -218,56 +185,84 @@ class FoodRow extends React.Component {
 
 class FoodModal extends React.Component {
   render() {
-    return (
-      <View style={styles.modalbox}>
-        <Text style={stylesGlobal.modalTitleText}>Edit Your Meal</Text>
-        <Text>{"\n"}</Text>
-        <Text>{"\n"}</Text>
-        <Text style={styles.txt}>Name :</Text>
+    let { data } = this.props;
+    let qtyComponent = this.props.info ? (
+      ""
+    ) : (
+      <View style={styles.modalRow}>
         <Text style={styles.txt}>Qty :</Text>
-        <Text style={styles.txt}>Details :</Text>
-        <Text style={styles.txt2}>Carbohydrate</Text>
-        <Text style={styles.txt2}>Protein</Text>
-        <Text style={styles.txt2}>Glucose</Text>
-        <Text style={styles.txt2}>Fat</Text>
-        <TouchableHighlight onPress={() => this.props.setModalVisible(false)}>
-          <View style={styles.savebox}>
-            <Text
-              style={{
-                alignSelf: "center",
-                fontWeight: "bold",
-                color: "white",
-              }}
-            >
-              Save Changes
-            </Text>
-          </View>
-        </TouchableHighlight>
+        <View style={{ flex: 1, alignSelf: "flex-end" }}>
+          <TouchableHighlight
+            onPress={() => this.props.editRow(data.id, data.qty - 1)}
+            style={{ flex: 1 }}
+          >
+            <Text style={{ color: color.p_teal }}>-</Text>
+          </TouchableHighlight>
+          <Text style={{ flex: 1 }}>{data.qty}</Text>
+          <TouchableHighlight
+            onPress={() => this.props.editRow(data.id, data.qty + 1)}
+            style={{ flex: 1 }}
+          >
+            <Text style={{ color: color.p_teal }}>+</Text>
+          </TouchableHighlight>
+        </View>
       </View>
     );
-  }
-}
-
-class FoodInfo extends React.Component {
-  render() {
     return (
       <View style={styles.modalbox}>
         <Text style={stylesGlobal.modalTitleText}>Meal Info</Text>
-        <Text>{"\n"}</Text>
-        <Text>{"\n"}</Text>
-        <Text style={styles.txt}>Name :</Text>
-        <Text style={styles.txt}>Qty :</Text>
-        <Text style={styles.txt2}>Carbohydrate</Text>
-        <Text style={styles.txt2}>Protein</Text>
-        <Text style={styles.txt2}>Glucose</Text>
-        <Text style={styles.txt2}>Fat</Text>
-        <View style={styles.savebox}>
+        <View style={styles.modalRow}>
+          <Text style={styles.txt}>Name :</Text>
+          <Text style={{ flex: 1, alignSelf: "flex-end" }}>{data.name}</Text>
+        </View>
+        {qtyComponent}
+        <View style={styles.modalRow}>
+          <Text style={styles.txt}>Details :</Text>
+        </View>
+        <View style={styles.modalRow}>
+          <Text style={styles.txt2}>Calories :</Text>
+          <Text style={{ flex: 1, alignSelf: "flex-end" }}>
+            {data.cal + "kal"}
+          </Text>
+        </View>
+        <View style={styles.modalRow}>
+          <Text style={styles.txt2}>Carbohydrate :</Text>
+          <Text style={{ flex: 1, alignSelf: "flex-end" }}>
+            {data.carbs + "g"}
+          </Text>
+        </View>
+        <View style={styles.modalRow}>
+          <Text style={styles.txt2}>Protein :</Text>
+          <Text style={{ flex: 1, alignSelf: "flex-end" }}>
+            {data.protein + "g"}
+          </Text>
+        </View>
+        <View style={styles.modalRow}>
+          <Text style={styles.txt2}>Fat :</Text>
+          <Text style={{ flex: 1, alignSelf: "flex-end" }}>
+            {data.fat + "g"}
+          </Text>
+        </View>
+        <View style={styles.modalRow}>
+          <Text style={styles.txt2}>Fiber :</Text>
+          <Text style={{ flex: 1, alignSelf: "flex-end" }}>
+            {data.fiber + "g"}
+          </Text>
+        </View>
+        <TouchableHighlight
+          style={styles.savebox}
+          onPress={() => this.props.setModalVisible(false)}
+        >
           <Text
-            style={{ alignSelf: "center", fontWeight: "bold", color: "white" }}
+            style={{
+              alignSelf: "center",
+              fontWeight: "bold",
+              color: "white",
+            }}
           >
             Ok, Cool!
           </Text>
-        </View>
+        </TouchableHighlight>
       </View>
     );
   }
@@ -286,6 +281,11 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
     paddingHorizontal: 10,
     backgroundColor: color.p_teal,
+  },
+  modalRow: {
+    width: "100%",
+    flexDirection: "row",
+    alignItems: "center",
   },
   row: {
     flexDirection: "row",
@@ -321,25 +321,29 @@ const styles = StyleSheet.create({
   modalbox: {
     paddingTop: "10%",
     backgroundColor: "white",
-    width: 300,
-    height: 400,
+    width: "100%",
+    minHeight: 400,
     alignItems: "center",
     justifyContent: "flex-start",
-    borderRadius: 7,
+    borderRadius: 8,
+    paddingHorizontal: 50,
   },
   txt: {
     alignSelf: "flex-start",
-    marginLeft: "8%",
-    paddingTop: "5%",
+    paddingTop: 10,
     fontWeight: "bold",
     fontSize: 15,
+    flex: 1,
+    justifyContent: "flex-end",
   },
   txt2: {
     alignSelf: "flex-start",
-    marginLeft: "8%",
-    paddingTop: "3%",
+    marginTop: 5,
     color: color.p_teal,
     fontSize: 12,
+    flex: 1,
+    width: "100%",
+    justifyContent: "flex-end",
   },
   savebox: {
     width: "50%",
@@ -352,4 +356,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export { Food, FoodEaten, FoodRecomendation, FoodModal, FoodInfo };
+export { Food, FoodEaten, FoodRecomendation, FoodModal };

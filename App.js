@@ -7,7 +7,7 @@ import {
   TouchableHighlight,
 } from "react-native";
 import { Biodata, BiodataModal } from "./components/biodata";
-import { FoodModal, FoodInfo, Food } from "./components/food";
+import { FoodModal, Food } from "./components/food";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import Modal from "react-native-modal";
@@ -24,6 +24,9 @@ class App extends React.Component {
     this.toggleDatePicker = this.toggleDatePicker.bind(this);
     this.changeDate = this.changeDate.bind(this);
     this.formatDate = this.formatDate.bind(this);
+    this.addFoodRow = this.addFoodRow.bind(this);
+    this.editFoodRow = this.editFoodRow.bind(this);
+    this.deleteFoodRow = this.deleteFoodRow.bind(this);
   }
 
   state = {
@@ -50,6 +53,7 @@ class App extends React.Component {
       fiber: 0,
       protein: 0,
     },
+    selected: [],
   };
 
   componentDidMount() {
@@ -137,19 +141,51 @@ class App extends React.Component {
             setModalVisible={this.setModalVisible}
             visible={this.state.modalVisible}
             data={this.state.modalData}
+            info={false}
           />
         );
         break;
       case "FoodInfo":
         modalComponent = (
-          <FoodInfo
+          <FoodModal
             setModalVisible={this.setModalVisible}
             visible={this.state.modalVisible}
             data={this.state.modalData}
+            info={true}
           />
         );
     }
     return modalComponent;
+  }
+
+  addFoodRow(data) {
+    let { selected } = this.state;
+    if (!selected.filter((row) => row.id == data.id).length) {
+      selected.push({ ...data, qty: 1 });
+    }
+    this.setState({ selected });
+  }
+
+  deleteFoodRow(data) {
+    let { selected } = this.state;
+    if (selected.filter((row) => row.id == data.id).length) {
+      selected = selected.filter((row) => row.id !== data.id);
+    }
+    this.setState({ selected });
+  }
+
+  editFoodRow(id, qty, data) {
+    let selected = this.state.selected;
+    let target = selected.filter((row) => row.id == id);
+    if (target.length) {
+      if (qty <= 1) {
+        qty = 1;
+      }
+      target = target[0];
+      target.qty = qty;
+      selected = selected.map((row) => (row.id == id ? target : row));
+      this.setState({ selected });
+    }
   }
 
   render() {
@@ -207,6 +243,10 @@ class App extends React.Component {
             <Food
               setModalVisible={this.setModalVisible}
               foodDB={foodDatabase}
+              selected={this.state.selected}
+              addRow={this.addFoodRow}
+              editRow={this.editFoodRow}
+              deleteRow={this.deleteFoodRow}
             />
             <View style={{ marginVertical: 20 }}></View>
             <Modal
