@@ -107,11 +107,7 @@ class BiodataModal extends React.Component {
           content={this.state.bio.gender}
           onChange={this.formChange}
         />
-        <BioForm
-          title='Birthdate'
-          content={this.state.bio.birthDate}
-          onChange={this.formChange}
-        />
+        <BioBirthdate/>
         <BioForm
           title='Body Weight'
           content={this.state.bio.weight}
@@ -145,12 +141,32 @@ class BioItem extends React.Component {
   }
 }
 
+class BioBirthdate extends React.Component {
+  render(){
+    return(
+      <View style={{flexDirection: row}}>
+        <Text style={styles.bioBirthdateTitle}>{`${this.props.title}:`}</Text>
+        <Text style={styles.bioBirthdateContent}>{`${this.props.content}`}</Text>
+        <TouchableHighlight 
+          style={{flex: 1}}
+          onPress={() => }>
+          <MaterialCommunityIcons
+            name='calendar'
+            color={color.p_teal}
+            size={30}
+          />
+        </TouchableHighlight>
+      </View>
+    );
+  }
+}
+
 class BioForm extends React.Component {
   render() {
     return (
       <View style={styles.bioForm}>
         <Text style={styles.bioFormTitle}>
-          {`${this.props.title}:`}>
+          {`${this.props.title}:`}
           <TextInput
             style={styles.bioFormInput}
             placeholder={this.props.content}
