@@ -6,6 +6,7 @@ import {
   TouchableHighlight,
   FlatList,
   TextInput,
+  ScrollView,
 } from "react-native";
 import Modal from "react-native-modal";
 import { dimension, color, stylesGlobal } from "../assets/style";
@@ -89,23 +90,99 @@ class BiodataModal extends React.Component {
   constructor(props) {
     super(props);
     this.formChange = this.formChange.bind(this);
+    this.toggleDatePicker = this.toggleDatePicker.bind(this);
+    this.changeDate = this.changeDate.bind(this);
+    this.formatDate = this.formatDate.bind(this);
+    this.toggleAllergy = this.toggleAllergy.bind(this);
   }
+
   state = {
     bio: this.props.bio,
+    test: "",
+    datePickerVisible: false,
+    dateVisual: this.props.bio.birthDate,
+    dateObj: this.props.bio.birthDateObj || new Date(),
   };
+
   formChange(text, title) {
     let bio = this.state.bio;
+    console.log(text);
     if (title === "Gender") bio.gender = text;
-    else if (title === "Birthdate") bio.birthDate = text;
     else if (title === "Body Weight") bio.weight = text;
     else if (title === "Body Height") bio.weight = text;
     else bio.bmi = text;
     this.setState({ bio });
     console.log(this.state);
   }
+
+  toggleDatePicker() {
+    let datePickerVisible = !this.state.datePickerVisible;
+    this.setState({ datePickerVisible });
+  }
+
+  formatDate(today) {
+    const day = ["Sun", "Mon", "Tue", "Wed", "Thru", "Fri", "Sat"];
+    const month = [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sept",
+      "Oct",
+      "Nov",
+      "Dec",
+    ];
+
+    //creating dateObj on 00:00:00
+    let y = today.getFullYear();
+    let m = today.getMonth();
+    let d = today.getDate();
+    let dateObj = new Date(y, m, d);
+
+    //Creating date in format : Sun, 09 August 2020
+    let dateVisual = `${day[today.getDay()]}, ${today.getDate()} ${
+      month[today.getMonth()]
+    } ${today.getFullYear()}`;
+
+    return { dateObj, dateVisual };
+  }
+
+  changeDate(event, date) {
+    let bio = this.state.bio;
+    date = this.formatDate(date);
+    bio.birthDate = date.dateVisual;
+    bio.birthDateObj = date.dateObj;
+    console.log("Date changed..");
+    console.log(date);
+    console.log(bio);
+    this.setState({
+      datePickerVisible: false,
+      bio,
+    });
+  }
+
+  toggleAllergy(name) {
+    console.log("Toggle allergy");
+    console.log(name);
+    let bio = this.state.bio;
+    let allergyData = bio.allergies;
+    if (allergyData.includes(name)) {
+      allergyData = allergyData.filter((row) => row != name);
+    } else {
+      allergyData.push(name);
+    }
+    bio.allergies = allergyData;
+    this.setState({ bio });
+  }
+
   render() {
+    let bio = this.state.bio;
     return (
-      <View style={styles.modalView}>
+      <ScrollView style={styles.modalView}>
         <View style={stylesGlobal.modalTitle}>
           <Text style={stylesGlobal.modalTitleText}>Your Data</Text>
           <TouchableHighlight
@@ -119,34 +196,53 @@ class BiodataModal extends React.Component {
             />
           </TouchableHighlight>
         </View>
+        {this.state.datePickerVisible && (
+          <DateTimePicker
+            testID='dateTimePicker'
+            value={bio.birthDateObj}
+            mode={"date"}
+            is24Hour={true}
+            display='default'
+            onChange={this.changeDate}
+          />
+        )}
         <BioForm
           title='Gender'
           content={this.state.bio.gender}
           onChange={this.formChange}
+          placeholder={"gender"}
         />
         <BioForm
           title='Birthdate'
           content={this.state.bio.birthDate}
           onChange={this.formChange}
+          placeholder={"birthdate"}
+          toggleDatePicker={this.toggleDatePicker}
         />
         <BioForm
           title='Body Weight'
           content={this.state.bio.weight}
           onChange={this.formChange}
+          placeholder={"weight"}
         />
         <BioForm
           title='Body Height'
           content={this.state.bio.height}
           onChange={this.formChange}
+          placeholder={"height"}
         />
-        {/* <Allergies data={["Nuts", "Dairy", "Seafood", "Eggs", "Wheat"]} /> */}
+        <Allergies
+          database={this.props.allergiesDB}
+          selected={this.state.bio.allergies}
+          toggleAllergy={this.toggleAllergy}
+        />
         <TouchableHighlight
-          style={styles.openButton}
+          style={[styles.openButton, { marginBottom: 50 }]}
           onPress={() => this.props.updateBio(this.state.bio)}
         >
           <Text style={styles.textStyle}>{`Save`}</Text>
         </TouchableHighlight>
-      </View>
+      </ScrollView>
     );
   }
 }
@@ -164,68 +260,92 @@ class BioItem extends React.Component {
 
 class BioForm extends React.Component {
   render() {
-    return (
-      <View style={styles.bioForm}>
-        <Text style={styles.bioFormTitle}>{`${this.props.title}:`}</Text>
-        <TextInput
-          style={styles.bioFormInput}
-          placeholder={this.props.content}
-          onChangeText={(text) => this.props.onChange(text, this.props.title)}
-        />
-      </View>
-    );
+    if (this.props.title === "Birthdate") {
+      return (
+        <View style={styles.bioForm}>
+          <Text style={styles.bioFormTitle}>{`${this.props.title}:`}</Text>
+          <View style={{ flexDirection: "row" }}>
+            <Text
+              style={[
+                styles.bioFormInput,
+                {
+                  flex: 3,
+                  alignItems: "center",
+                  height: "100%",
+                  justifyContent: "center",
+                },
+              ]}
+            >
+              {this.props.content}
+            </Text>
+            <TouchableHighlight
+              style={{ flex: 1, alignItems: "center" }}
+              onPress={() => this.props.toggleDatePicker()}
+            >
+              <MaterialCommunityIcons
+                name='calendar'
+                size={32}
+                color={color.p_teal}
+              />
+            </TouchableHighlight>
+          </View>
+        </View>
+      );
+    } else {
+      return (
+        <View style={styles.bioForm}>
+          <Text style={styles.bioFormTitle}>{`${this.props.title}:`}</Text>
+          <TextInput
+            style={styles.bioFormInput}
+            placeholder={this.props.placeholder}
+            value={this.props.content}
+            onChangeText={(text) => this.props.onChange(text, this.props.title)}
+            keyboardType={"number-pad "}
+          />
+        </View>
+      );
+    }
   }
 }
 
 class Allergies extends React.Component {
-  constructor(props) {
-    super(props);
-    this.addAllergy = this.addAllergy.bind(this);
-    this.deleteAllergy = this.deleteAllergy.bind(this);
-  }
-  state = {
-    database: this.props.data,
-    selected: [],
-  };
-  addAllergy(name) {
-    let selected = this.state.selected;
-    if (!selected.includes(name)) {
-      selected.push(name);
-    }
-    this.setState({ selected });
-  }
-  deleteAllergy(name) {
-    let selected = this.state.selected;
-    if (selected.includes(name)) {
-      selected = selected.filter((row) => row != name);
-    }
-    this.setState({ selected });
-  }
   render() {
-    let { selected, database } = this.state;
+    let { selected, database } = this.props;
     let notSelected = database.filter((row) => !selected.includes(row));
+    console.log("Ini list allergynya");
+    console.log(selected, notSelected);
     let selectedAllergies = selected.map((row) => (
       <AllergyRow
         name={row}
-        onPress={this.deleteAllergy}
+        onPress={this.props.toggleAllergy}
         handlePress={row}
         selected={true}
+        key={row}
       />
     ));
     let notSelectedAllergies = notSelected.map((row) => (
       <AllergyRow
         name={row}
-        onPress={this.addAllergy}
+        onPress={this.props.toggleAllergy}
         handlePress={row}
         selected={false}
+        key={row}
       />
     ));
     return (
-      <View>
-        <Text>Allergies</Text>
-        <View style={styles.allergyContainer}>{selectedAllergies}</View>
-        <Text>Add Allergies</Text>
-        <View style={styles.allergyContainer}>{notSelectedAllergies}</View>
+      <View style={{ width: "100%", height: 210 }}>
+        <View style={{ height: 100 }}>
+          <Text style={{ width: "100%", height: 25 }}>Allergies</Text>
+          <View style={styles.allergyContainer}>
+            <ScrollView>{selectedAllergies}</ScrollView>
+          </View>
+        </View>
+        <View style={{ height: 100 }}>
+          <Text style={{ width: "100%", height: 25 }}>Add Allergies</Text>
+          <View style={styles.allergyContainer}>
+            <ScrollView>{notSelectedAllergies}</ScrollView>
+          </View>
+        </View>
       </View>
     );
   }
@@ -234,42 +354,52 @@ class Allergies extends React.Component {
 class AllergyRow extends React.Component {
   render() {
     let icon = this.props.selected ? (
-      <MaterialCommunityIcons name='minus' size={24} color={color.p_red} />
+      <MaterialCommunityIcons name='minus' size={16} color={color.p_red} />
     ) : (
-      <MaterialCommunityIcons name='plus' size={24} color={color.p_teal} />
+      <MaterialCommunityIcons name='plus' size={16} color={color.p_teal} />
     );
     return (
-      <View style={styles.allergyRow}>
-        <Text style={styles.allergyName}>{this.props.name}</Text>
-        <TouchableHighlight
-          onPress={() => this.props.onPress(this.props.handlePress)}
-        >
-          {icon}
-        </TouchableHighlight>
-      </View>
+      <TouchableHighlight
+        onPress={() => this.props.onPress(this.props.handlePress)}
+      >
+        <View style={styles.allergyRow}>
+          <Text style={styles.allergyName}>{this.props.name}</Text>
+          <View style={styles.allergyButton}>{icon}</View>
+        </View>
+      </TouchableHighlight>
     );
   }
 }
 
 const styles = StyleSheet.create({
   allergyContainer: {
-    width: "200",
-    height: 100,
+    width: "100%",
+    height: 75,
     borderRadius: 4,
     borderColor: color.p_teal,
   },
   allergyRow: {
     width: "100%",
     backgroundColor: color.p_lightBlue,
-    height: 30,
+    height: 35,
     flexDirection: "row",
+    marginBottom: 5,
+    alignItems: "center",
+    padding: 0,
+    borderRadius: 8,
   },
   allergyName: {
     flex: 3,
+    color: color.f_dark,
+    paddingHorizontal: 5,
   },
   allergyButton: {
     flex: 1,
-    backgroundColor: color.f_gray,
+    height: "100%",
+    backgroundColor: color.f_light,
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 8,
   },
   centeredView: {
     flex: 1,
@@ -325,10 +455,11 @@ const styles = StyleSheet.create({
   },
   modalView: {
     width: "100%",
+    height: "60%",
     padding: 20,
+    paddingHorizontal: 35,
     backgroundColor: color.p_white,
     borderRadius: 20,
-    alignItems: "center",
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
@@ -338,10 +469,13 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
   },
   openButton: {
-    backgroundColor: "#F194FF",
+    backgroundColor: color.p_teal, //#F194FF
     borderRadius: 20,
+    height: 50,
     padding: 10,
     elevation: 2,
+    alignItems: "center",
+    justifyContent: "center",
   },
   textStyle: {
     color: "white",
@@ -374,7 +508,7 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     alignItems: "center",
     justifyContent: "flex-start",
-    marginBottom: 30,
+    marginBottom: 10,
     borderBottomColor: "#f8f8f8",
     borderBottomWidth: 1,
   },

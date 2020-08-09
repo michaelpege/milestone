@@ -13,6 +13,8 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import Modal from "react-native-modal";
 import { color, stylesGlobal } from "./assets/style";
 
+const allergiesDB = ["Nuts", "Dairy", "Seafood", "Eggs", "Wheat"];
+
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -28,11 +30,12 @@ class App extends React.Component {
     modalComponent: "Biodata",
     modalVisible: false,
     datePickerVisible: false,
-    dateObj: "",
+    dateObj: new Date(),
     dateVisual: "",
     bio: {
       gender: "Male",
       birthDate: "01/01/2000",
+      birthDateObj: new Date(),
       weight: "57",
       height: "170",
       bmi: "20.1",
@@ -113,6 +116,7 @@ class App extends React.Component {
             bio={this.state.bio}
             visible={this.state.modalVisible}
             updateBio={this.updateBio}
+            allergiesDB={allergiesDB}
           />
         );
         break;
@@ -178,6 +182,7 @@ class App extends React.Component {
             <Biodata
               bio={this.state.bio}
               setModalVisible={this.setModalVisible}
+              formatDate={this.formatDate}
             />
             <View style={{ marginVertical: 20 }}></View>
             <Modal
@@ -189,13 +194,9 @@ class App extends React.Component {
                 margin: 0,
                 padding: 20,
               }}
+              propagateSwipe={true}
             >
-              <BiodataModal
-                setModalVisible={this.setModalVisible}
-                bio={this.state.bio}
-                visible={this.state.modalVisible}
-                updateBio={this.updateBio}
-              />
+              {modalComponent}
             </Modal>
             {this.state.datePickerVisible && (
               <DateTimePicker
