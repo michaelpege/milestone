@@ -1,7 +1,7 @@
 import React from "react";
 import { StyleSheet, Text, View,ScrollView, TouchableHighlight} from "react-native";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import { color } from "../assets/style";
+import { dimension, color, stylesGlobal } from "../assets/style";
 
 const food = [
   {
@@ -137,7 +137,7 @@ class FoodRow extends React.Component {
           />
       </View>)  : (
         <View style={styles.whiterow}>
-        <TouchableHighlight  onPress = {()=>this.props.setModalVisible(true,'Food')}>
+        <TouchableHighlight  onPress = {()=>this.props.setModalVisible(true,'FoodInfo')}>
         <MaterialCommunityIcons style ={{flex:1,marginLeft:20,paddingRight:20}}
           name='information'
           color = {color.white}
@@ -169,7 +169,42 @@ class FoodModal extends React.Component {
   {
     return(
       <View style={styles.modalbox}>
+        <Text style={stylesGlobal.modalTitleText}>Edit Your Meal</Text>
+        <Text>{"\n"}</Text>
+        <Text>{"\n"}</Text>
+        <Text style={styles.txt}>Name :</Text>
+        <Text style={styles.txt}>Qty :</Text>
+        <Text style={styles.txt}>Details :</Text>
+        <Text style={styles.txt2}>Carbohydrate</Text>
+        <Text style={styles.txt2}>Protein</Text>
+        <Text style={styles.txt2}>Glucose</Text>
+        <Text style={styles.txt2}>Fat</Text>
+        <View style={styles.savebox}>
+          <Text style={{alignSelf:"center",fontWeight:"bold",color:"white"}}>Save Changes</Text>
+        </View>
+      </View>
+    )
+  }
+}
 
+class FoodInfo extends React.Component {
+  
+  render()
+  {
+    return(
+      <View style={styles.modalbox}>
+        <Text style={stylesGlobal.modalTitleText}>Meal Info</Text>
+        <Text>{"\n"}</Text>
+        <Text>{"\n"}</Text>
+        <Text style={styles.txt}>Name :</Text>
+        <Text style={styles.txt}>Qty :</Text>
+        <Text style={styles.txt2}>Carbohydrate</Text>
+        <Text style={styles.txt2}>Protein</Text>
+        <Text style={styles.txt2}>Glucose</Text>
+        <Text style={styles.txt2}>Fat</Text>
+        <View style={styles.savebox}>
+          <Text style={{alignSelf:"center",fontWeight:"bold",color:"white"}}>Ok, Cool!</Text>
+        </View>
       </View>
     )
   }
@@ -186,7 +221,7 @@ const styles = StyleSheet.create({
     borderRadius:8,
     marginLeft:50,
     marginRight :50, 
-    backgroundColor : 'powderblue',
+    backgroundColor : color.p_teal,
   },
   row: {
      flexDirection:"row",
@@ -196,7 +231,7 @@ const styles = StyleSheet.create({
       marginLeft:25,
       marginRight :25, 
       marginTop : 20,
-      backgroundColor : 'steelblue',
+      backgroundColor : color.p_lightBlue,
   },
   feature: {
     flex:5,
@@ -222,16 +257,40 @@ const styles = StyleSheet.create({
     flex: 3,
   },
   modalbox: {
+    paddingTop : '10%',
     backgroundColor : 'white',
     width : 300,
     height : 400,
     alignItems : "center",
-    justifyContent:"center",
+    justifyContent:"flex-start",
     borderRadius : 7,
   },
+  txt : {
+    alignSelf: "flex-start",
+    marginLeft:"8%",
+    paddingTop:"5%",
+    fontWeight:'bold',
+    fontSize :15,
+  },
+  txt2 : {
+    alignSelf: "flex-start",
+    marginLeft:"8%",
+    paddingTop :"3%",
+    color : color.p_teal,
+    fontSize : 12,
+  },
+  savebox : {
+    width : "50%",
+    height : "10%",
+    backgroundColor : color.p_teal,
+    marginTop : "6%",
+    justifyContent : "center",
+    alignSelf : "center",
+    borderRadius : 7,
+  }
 });
 
-export { Food,FoodEaten, FoodRecomendation,FoodModal };
+export { Food,FoodEaten, FoodRecomendation,FoodModal,FoodInfo };
 
 
 
