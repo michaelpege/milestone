@@ -101,10 +101,6 @@ class FoodEaten extends React.Component {
 }
 
 class FoodRecomendation extends React.Component {
-  state = {
-    database: food,
-    selected: [],
-  };
   render() {
     let { data } = this.props;
     return (
