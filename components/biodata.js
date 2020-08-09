@@ -109,8 +109,7 @@ class BiodataModal extends React.Component {
     console.log(text);
     if (title === "Gender") bio.gender = text;
     else if (title === "Body Weight") bio.weight = text;
-    else if (title === "Body Height") bio.weight = text;
-    else bio.bmi = text;
+    else bio.height = text;
     this.setState({ bio });
     console.log(this.state);
   }
