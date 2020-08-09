@@ -8,7 +8,7 @@ import {
   TextInput,
 } from "react-native";
 import Modal from "react-native-modal";
-import { dimension, color } from "../assets/style";
+import { dimension, color, stylesGlobal } from "../assets/style";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
@@ -19,13 +19,19 @@ class Biodata extends React.Component {
 
   state = {
     bio: this.props.bio,
-    modalVisible: false,
   };
 
   render() {
     return (
       <View style={styles.centeredView}>
-        <Text style={{ alignSelf: "flex-start" }}>Your Data : </Text>
+        <Text
+          style={[
+            stylesGlobal.textHead,
+            { alignSelf: "flex-start", marginBottom: 5 },
+          ]}
+        >
+          Your Data :{" "}
+        </Text>
         <View style={styles.biodataContainer}>
           <View style={styles.bioRow}>
             <BioItem title='Gender' content={this.state.bio.gender} />
@@ -65,9 +71,9 @@ class Biodata extends React.Component {
               />
             </View>
           </View>
-          <View>
+          <View style={{ width: "100%", alignItems: "flex-end", marginTop: 5 }}>
             <TouchableHighlight
-              style={[styles.buttonMin, { position: "absolute", right: 0 }]}
+              style={[styles.buttonMin]}
               onPress={() => this.props.setModalVisible(true, "Biodata")}
             >
               <Text style={styles.textStyle}>{`Edit`}</Text>
@@ -82,13 +88,11 @@ class Biodata extends React.Component {
 class BiodataModal extends React.Component {
   constructor(props) {
     super(props);
-    this.handleChange = this.handleChange.bind(this);
     this.formChange = this.formChange.bind(this);
   }
   state = {
     bio: this.props.bio,
   };
-  handleChange() {}
   formChange(text, title) {
     let bio = this.state.bio;
     if (title === "Gender") bio.gender = text;
@@ -102,6 +106,19 @@ class BiodataModal extends React.Component {
   render() {
     return (
       <View style={styles.modalView}>
+        <View style={stylesGlobal.modalTitle}>
+          <Text style={stylesGlobal.modalTitleText}>Your Data</Text>
+          <TouchableHighlight
+            onPress={() => this.props.setModalVisible(false)}
+            style={stylesGlobal.modalClose}
+          >
+            <MaterialCommunityIcons
+              name={"close"}
+              size={30}
+              color={color.p_red}
+            />
+          </TouchableHighlight>
+        </View>
         <BioForm
           title='Gender'
           content={this.state.bio.gender}
@@ -122,7 +139,7 @@ class BiodataModal extends React.Component {
           content={this.state.bio.height}
           onChange={this.formChange}
         />
-        <Allergies data={["Nuts", "Dairy", "Seafood", "Eggs", "Wheat"]} />
+        {/* <Allergies data={["Nuts", "Dairy", "Seafood", "Eggs", "Wheat"]} /> */}
         <TouchableHighlight
           style={styles.openButton}
           onPress={() => this.props.updateBio(this.state.bio)}
@@ -149,14 +166,12 @@ class BioForm extends React.Component {
   render() {
     return (
       <View style={styles.bioForm}>
-        <Text style={styles.bioFormTitle}>
-          {`${this.props.title}:`}>
-          <TextInput
-            style={styles.bioFormInput}
-            placeholder={this.props.content}
-            onChangeText={(text) => this.props.onChange(text, this.props.title)}
-          />
-        </Text>
+        <Text style={styles.bioFormTitle}>{`${this.props.title}:`}</Text>
+        <TextInput
+          style={styles.bioFormInput}
+          placeholder={this.props.content}
+          onChangeText={(text) => this.props.onChange(text, this.props.title)}
+        />
       </View>
     );
   }
@@ -260,15 +275,15 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    marginTop: 22,
+    marginVertical: 5,
   },
   biodataContainer: {
     width: "100%",
     minHeight: dimension.height / 3,
     paddingVertical: 20,
-    paddingHorizontal: 50,
+    paddingHorizontal: 35,
     backgroundColor: color.p_teal,
-    borderRadius: 16,
+    borderRadius: 8,
   },
   bioRow: {
     flexDirection: "row",
@@ -309,10 +324,10 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   modalView: {
-    margin: 20,
-    backgroundColor: "white",
+    width: "100%",
+    padding: 20,
+    backgroundColor: color.p_white,
     borderRadius: 20,
-    padding: 35,
     alignItems: "center",
     shadowColor: "#000",
     shadowOffset: {
@@ -321,7 +336,6 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
-    elevation: 5,
   },
   openButton: {
     backgroundColor: "#F194FF",
@@ -339,16 +353,28 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   bioFormTitle: {
-    flex: 1,
+    color: color.p_teal,
+    fontSize: 16,
+    fontWeight: "800",
+    width: "100%",
+    height: 20,
   },
   bioFormInput: {
-    flex: 2,
+    backgroundColor: color.f_light,
+    color: color.f_dark,
+    height: 40,
+    width: "100%",
+    borderRadius: 8,
+    paddingLeft: 10,
+    alignSelf: "flex-start",
   },
   bioForm: {
-    alignSelf: "stretch",
-    height: 40,
+    height: 60,
+    width: "100%",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "flex-start",
     marginBottom: 30,
-    color: "#fff",
     borderBottomColor: "#f8f8f8",
     borderBottomWidth: 1,
   },

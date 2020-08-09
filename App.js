@@ -3,60 +3,108 @@ import {
   Text,
   View,
   SafeAreaView,
-  Button,
   ScrollView,
   TouchableHighlight,
 } from "react-native";
-<<<<<<< HEAD
 import { Biodata, BiodataModal } from "./components/biodata";
-import { FoodEaten, FoodRecomendation } from "./components/food";
-import { Statistic } from "./components/statistic";
-=======
-import { Biodata, BiodataModal } from "./components/Biodata";
-import { FoodEaten,Food } from "./components/Food";
-import { Statistic } from "./components/statistic";
-import { FoodRecomendation,FoodModal } from "./components/Food";
-
->>>>>>> d4fb27fe7701f035c909fb72556ea78ebad3fbd2
+import { FoodModal } from "./components/food";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import Modal from "react-native-modal";
-import { color } from "./assets/style";
+import { color, stylesGlobal } from "./assets/style";
 
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.setModalVisible = this.setModalVisible.bind(this);
     this.updateBio = this.updateBio.bind(this);
+    this.toggleDatePicker = this.toggleDatePicker.bind(this);
+    this.changeDate = this.changeDate.bind(this);
+    this.formatDate = this.formatDate.bind(this);
   }
+
   state = {
     modalActive: false,
-    text: "",
     modalComponent: "Biodata",
     modalVisible: false,
+    datePickerVisible: false,
+    dateObj: "",
+    dateVisual: "",
     bio: {
       gender: "Male",
       birthDate: "01/01/2000",
       weight: "57",
       height: "170",
       bmi: "20.1",
-      Allergies: ["Nuts", "Seafood"],
+      allergies: ["Nuts", "Seafood"],
     },
   };
+
+  componentDidMount() {
+    let date = this.formatDate(new Date());
+    this.setState({ dateObj: date.dateObj, dateVisual: date.dateVisual });
+  }
+
+  formatDate(today) {
+    const day = ["Sun", "Mon", "Tue", "Wed", "Thru", "Fri", "Sat"];
+    const month = [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sept",
+      "Oct",
+      "Nov",
+      "Dec",
+    ];
+
+    //creating dateObj on 00:00:00
+    let y = today.getFullYear();
+    let m = today.getMonth();
+    let d = today.getDate();
+    let dateObj = new Date(y, m, d);
+
+    //Creating date in format : Sun, 09 August 2020
+    let dateVisual = `${day[today.getDay()]}, ${today.getDate()} ${
+      month[today.getMonth()]
+    } ${today.getFullYear()}`;
+
+    return { dateObj, dateVisual };
+  }
+
   setModalVisible(visible, type) {
-    type = type == "" || type == undefined ? this.state.modalComponent : type;
-    this.setState({ modalVisible: visible, modalComponent: type });
-    console.log("Masuk");
+    let target =
+      type == "" || type == undefined ? this.state.modalComponent : type;
+    this.setState({ modalVisible: visible, modalComponent: target });
     console.log(visible, type);
   }
-  updateBio(modalBio){
-    this.setState({bio: modalBio});  
-//    this.setState({modalVisible: visible});
+
+  updateBio(modalBio) {
+    this.setState({ bio: modalBio });
+    //    this.setState({modalVisible: visible});
     this.setModalVisible(!this.state.modalVisible);
-    console.log("masuk");
   }
-  render() {
-    let modalComponent = "";
+
+  toggleDatePicker() {
+    let datePickerVisible = !this.state.datePickerVisible;
+    this.setState({ datePickerVisible });
+  }
+
+  changeDate(event, date) {
+    date = this.formatDate(date);
+    this.setState({
+      dateVisual: date.dateVisual,
+      datePickerVisible: false,
+      dateObj: date.dateObj,
+    });
+  }
+
+  getModalComponent() {
+    let modalComponent;
     switch (this.state.modalComponent) {
       case "Biodata":
         modalComponent = (
@@ -68,20 +116,25 @@ class App extends React.Component {
           />
         );
         break;
-      case "Food" :
+      case "Food":
         modalComponent = (
-          <FoodModal 
+          <FoodModal
             setModalVisible={this.setModalVisible}
             visible={this.state.modalVisible}
           />
         );
         break;
     }
+    return modalComponent;
+  }
+
+  render() {
+    let modalComponent = this.getModalComponent();
     return (
       <SafeAreaView
         style={{
           width: "100%",
-          height: "100%",
+          minHeight: "100%",
           flex: 1,
           flexDirection: "column",
           alignItems: "center",
@@ -89,73 +142,101 @@ class App extends React.Component {
           paddingHorizontal: 30,
         }}
       >
-        <ScrollView style={{ width: "100%", height: "100%" }}>
-          <View style={{ width: "100%", height: 50, marginTop: 20 }}>
-            <Text style={{ height: 40, fontSize: 30 }}>Nama Applikasi</Text>
+        <ScrollView>
+          <View style={stylesGlobal.container}>
+            <AppTitle />
             <View
               style={{
-                width: "75%",
-                height: 10,
-                backgroundColor: color.p_teal,
-                borderRadius: 8,
-              }}
-            ></View>
-          </View>
-          <View
-            style={{
-              width: "100%",
-              height: 30,
-              marginTop: 20,
-              flexDirection: "row",
-            }}
-          >
-            <Text style={{ height: 30, fontSize: 16 }}>Pick Your Data : </Text>
-            <TouchableHighlight style={{ position: "absolute", right: 0 }}>
-              <MaterialCommunityIcons
-                name='calendar'
-                color={color.p_teal}
-                size={30}
-              />
-            </TouchableHighlight>
-          </View>
-          <Biodata
-            bio={this.state.bio}
-            setModalVisible={this.setModalVisible}
-          />
-          <View style={{ marginVertical: 20 }}></View>
-          <FoodEaten />
-          <Statistic />
-          <Modal
-            isVisible={this.state.modalVisible}
-            onBackdropPress={() => this.setModalVisible(false, "")}
-            style={{
-              width: "100%",
-              height: "100%",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <View
-              style={{
-                width: "75%",
-                height: "75%",
-                backgroundColor: color.p_white,
+                width: "100%",
+                height: 30,
+                flexDirection: "row",
               }}
             >
-              <Text>ini adalah isi modal</Text>
-              <Button
-                onPress={() => this.setModalVisible(false, "")}
-                title='Close'
-              />
+              <View style={{ flex: 1 }}>
+                <Text style={stylesGlobal.textHead}>See Data For :</Text>
+              </View>
+              <View
+                style={{
+                  flex: 1,
+                  flexDirection: "row",
+                  justifyContent: "flex-end",
+                  alignItems: "center",
+                }}
+              >
+                <Text style={stylesGlobal.textHead}>
+                  {this.state.dateVisual}
+                </Text>
+                <TouchableHighlight onPress={() => this.toggleDatePicker()}>
+                  <MaterialCommunityIcons
+                    name='calendar'
+                    color={color.p_teal}
+                    size={30}
+                  />
+                </TouchableHighlight>
+              </View>
             </View>
-          </Modal>
-
-          <Button
-            onPress={() => this.setModalVisible(true, "Biodata")}
-            title='Open'
-          />
+            <Biodata
+              bio={this.state.bio}
+              setModalVisible={this.setModalVisible}
+            />
+            <View style={{ marginVertical: 20 }}></View>
+            <Modal
+              isVisible={this.state.modalVisible}
+              onBackdropPress={() => this.setModalVisible(false, "")}
+              style={{
+                width: "100%",
+                height: "100%",
+                margin: 0,
+                padding: 20,
+              }}
+            >
+              <BiodataModal
+                setModalVisible={this.setModalVisible}
+                bio={this.state.bio}
+                visible={this.state.modalVisible}
+                updateBio={this.updateBio}
+              />
+            </Modal>
+            {this.state.datePickerVisible && (
+              <DateTimePicker
+                testID='dateTimePicker'
+                value={this.state.dateObj}
+                mode={"date"}
+                is24Hour={true}
+                display='default'
+                onChange={this.changeDate}
+              />
+            )}
+          </View>
         </ScrollView>
       </SafeAreaView>
+    );
+  }
+}
+
+class AppTitle extends React.Component {
+  render() {
+    return (
+      <View style={{ width: "100%", height: 50, marginVertical: 20 }}>
+        <Text
+          style={{
+            height: 40,
+            fontSize: 30,
+            fontWeight: "bold",
+            marginBottom: 5,
+          }}
+        >
+          Nama Aplikasi
+        </Text>
+        <View
+          style={{
+            width: "75%",
+            height: 5,
+            backgroundColor: color.p_teal,
+            borderRadius: 8,
+          }}
+        ></View>
+      </View>
     );
   }
 }
