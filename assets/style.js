@@ -15,13 +15,38 @@ const color = {
   f_light: "#EBEBEB",
 };
 
-const styles = StyleSheet.create({
+const stylesGlobal = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff",
+    width: "100%",
+  },
+  textHead: {
+    fontSize: 18,
+    color: color.f_dark,
+    fontWeight: "bold",
+  },
+  text: {
+    fontSize: 14,
+    color: color.f_dark,
+    fontWeight: "800",
+  },
+  modalTitle: {
+    width: "100%",
     alignItems: "center",
     justifyContent: "center",
+    height: 30,
+    marginBottom: 30,
+  },
+  modalClose: {
+    position: "absolute",
+    right: 0,
+  },
+  modalTitleText: {
+    fontSize: 24,
+    color: color.p_teal,
+    fontWeight: "bold",
   },
 });
 
-export { styles, dimension, color };
+export { stylesGlobal, dimension, color };
