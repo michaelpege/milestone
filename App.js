@@ -7,7 +7,8 @@ import {
   TouchableHighlight,
 } from "react-native";
 import { Biodata, BiodataModal } from "./components/biodata";
-import { FoodModal } from "./components/food";
+import { FoodModal,FoodInfo } from "./components/food";
+import { FoodEaten,Food,FoodRecomendation } from "./components/Food";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import Modal from "react-native-modal";
@@ -128,6 +129,15 @@ class App extends React.Component {
           />
         );
         break;
+      case "FoodInfo":
+        modalComponent = (
+          <FoodInfo
+            setModalVisible={this.setModalVisible}
+            visible={this.state.modalVisible}
+          />
+        );
+      
+      
     }
     return modalComponent;
   }
@@ -210,6 +220,8 @@ class App extends React.Component {
             )}
           </View>
         </ScrollView>
+        <Food setModalVisible={this.setModalVisible }/>
+        
       </SafeAreaView>
     );
   }
