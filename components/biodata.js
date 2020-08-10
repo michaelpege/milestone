@@ -180,6 +180,7 @@ class BiodataModal extends React.Component {
 
   render() {
     let bio = this.state.bio;
+    // console.log(bio);
     return (
       <ScrollView style={styles.modalView}>
         <View style={stylesGlobal.modalTitle}>
@@ -299,7 +300,7 @@ class BioForm extends React.Component {
             placeholder={this.props.placeholder}
             value={this.props.content}
             onChangeText={(text) => this.props.onChange(text, this.props.title)}
-            keyboardType={"number-pad "}
+            keyboardType={"number-pad"}
           />
         </View>
       );
@@ -410,7 +411,7 @@ const styles = StyleSheet.create({
     width: "100%",
     minHeight: dimension.height / 3,
     paddingVertical: 20,
-    paddingHorizontal: 35,
+    paddingHorizontal: 20,
     backgroundColor: color.p_teal,
     borderRadius: 8,
   },
@@ -425,16 +426,19 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
     textAlign: "left",
     margin: 5,
+    height: 60,
   },
   bioTitle: {
     fontSize: 12,
     color: color.f_light,
     fontWeight: "400",
+    height: 30,
   },
   bioContent: {
-    fontSize: 24,
+    fontSize: 20,
     color: color.f_light,
     fontWeight: "600",
+    height: 30,
   },
   buttonMin: {
     backgroundColor: color.p_teal,

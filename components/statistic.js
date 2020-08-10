@@ -1,53 +1,16 @@
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
-
-const akg = {
-  cal: 1000,
-  carbs: 2000,
-  fat: 500,
-  fiber: 20,
-  protein: 500,
-};
-
-const food = [
-  {
-    id: "1",
-    name: "Chicken Breast",
-    portion: 100,
-    restriction: [],
-    tags: ["protein", "cal"],
-    cal: 239,
-    carbs: 0,
-    fat: 14,
-    fiber: 0,
-    protein: 27,
-  },
-  {
-    id: "2",
-    name: "Chicken Breast",
-    portion: 100,
-    restriction: [],
-    tags: ["protein", "cal"],
-    cal: 239,
-    carbs: 0,
-    fat: 14,
-    fiber: 0,
-    protein: 27,
-  },
-];
-
-const foodEaten = [
-  {
-    id: "1",
-    qty: 2,
-  },
-];
+import { stylesGlobal, color } from "../assets/style";
 
 class Statistic extends React.Component {
   constructor(props) {
     super(props);
-    this.cariProperti = this.cariProperti.bind(this);
     this.hitungProgress = this.hitungProgress.bind(this);
+  }
+
+  componentDidMount() {
+    console.log("Mounted..");
+    console.log(this.state.akg);
   }
 
   state = {
@@ -58,50 +21,47 @@ class Statistic extends React.Component {
       fiber: 0,
       protein: 0,
     },
-    akg: akg,
+    akg: this.props.akg,
+    dataMakanan: this.props.dataMakanan,
   };
   // --> dataMakanan [{id:..,qty:..}]
   // --> {cal, carbs, fat, fiber, protein}
   hitungProgress(dataMakanan) {
     let result = { cal: 0, carbs: 0, fat: 0, fiber: 0, protein: 0 };
-    dataMakanan.map((row) => {
-      let data = this.cariProperti(row);
-      result.cal += data.cal;
-      result.carbs += data.carbs;
-      result.fat += data.fat;
-      result.fiber += data.fiber;
-      result.protein += data.protein;
-    });
-    this.setState({ progress: result });
-  }
-
-  cariProperti(dataMakanan, database) {
-    let target = database.filter((row) => row.id == dataMakanan.id)[0];
-    let result = {
-      cal: target.cal * dataMakanan.qty,
-      carbs: target.carbs * dataMakanan.qty,
-      fat: target.fat * dataMakanan.qty,
-      fiber: target.fiber * dataMakanan.qty,
-      protein: target.protein * dataMakanan.qty,
-    };
+    let akg = this.props.akg;
+    if (dataMakanan.length) {
+      dataMakanan.map((data) => {
+        result.cal += data.cal * data.qty;
+        result.carbs += data.carbs * data.qty;
+        result.fat += data.fat * data.qty;
+        result.fiber += data.fiber * data.qty;
+        result.protein += data.protein * data.qty;
+      });
+    }
+    // console.log("Setelah di map");
+    // console.log(result);
+    // console.log("Ini AKG");
+    // console.log(akg);
+    result.cal = parseInt((result.cal / akg.cal) * 100);
+    result.carbs = parseInt((result.carbs / akg.carbs) * 100);
+    result.fat = parseInt((result.fat / akg.fat) * 100);
+    result.fiber = parseInt((result.fiber / akg.fiber) * 100);
+    result.protein = parseInt((result.protein / akg.protein) * 100);
+    // console.log("Setelah dihitung");
+    // console.log(result);
     return result;
   }
 
   render() {
-    let panjang = this.state.progressCalories / this.state.caloriesNeeded + "%";
-    let data = ["a", "b", "c", "d"];
-    let component = data.map((row) => <Text>{row}</Text>);
+    let progress = this.hitungProgress(this.props.dataMakanan);
     return (
       <View>
-        {component}
-        <View>
-          <Text> TEST 1</Text>
-          <ProgressBar values={"10%"} />
-          <ProgressBar values={"75%"} />
-          <ProgressBar values={"40%"} />
-          <ProgressBar values={"100%"} />
-          <ProgressBar values={"20%"} />
-        </View>
+        <Text style={stylesGlobal.textHead}>Statistic</Text>
+        <ProgressBar values={progress.cal + "%"} title={"Calories"} />
+        <ProgressBar values={progress.carbs + "%"} title={"Carbohidrate"} />
+        <ProgressBar values={progress.fat + "%"} title={"Fat"} />
+        <ProgressBar values={progress.protein + "%"} title={"Protein"} />
+        <ProgressBar values={progress.fiber + "%"} title={"Fiber"} />
       </View>
     );
   }
@@ -110,9 +70,26 @@ class Statistic extends React.Component {
 class ProgressBar extends React.Component {
   render() {
     return (
-      <View style={styles.bingkai}>
-        <View style={styles.statis}></View>
-        <View style={[styles.progressBar, { width: this.props.values }]}></View>
+      <View
+        style={{
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "center",
+          height: 20,
+          marginVertical: 5,
+        }}
+      >
+        <View style={{ flex: 2, justifyContent: "center" }}>
+          <Text style={{ fontWeight: "bold", color: color.p_teal, height: 20 }}>
+            {this.props.title}
+          </Text>
+        </View>
+        <View style={styles.bingkai}>
+          <View style={styles.statis}></View>
+          <View
+            style={[styles.progressBar, { width: this.props.values }]}
+          ></View>
+        </View>
       </View>
     );
   }
@@ -120,27 +97,30 @@ class ProgressBar extends React.Component {
 
 const styles = StyleSheet.create({
   bingkai: {
+    flex: 4,
     width: "100%",
-    height: 50,
+    height: 10,
     backgroundColor: "#f7f7f7",
     marginBottom: 5,
     position: "relative",
+    borderRadius: 8,
   },
   statis: {
     width: "100%",
-    height: 50,
-    backgroundColor: "#EBEBEB",
+    height: 10,
+    backgroundColor: color.f_light,
     position: "absolute",
     zIndex: 1,
+    borderRadius: 8,
   },
   progressBar: {
-    width: "40%",
-    height: 50,
-    backgroundColor: "#0a916b",
+    height: 10,
+    backgroundColor: color.p_teal,
     zIndex: 2,
     position: "absolute",
     top: 0,
     left: 0,
+    borderRadius: 8,
   },
 });
 

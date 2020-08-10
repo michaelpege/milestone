@@ -23,12 +23,16 @@ class Food extends React.Component {
           data={this.props.selected}
           editRow={this.props.editRow}
           deleteRow={this.props.deleteRow}
+          scroll={this.props.scroll}
+          enableScrollViewScroll={this.props.enableScrollView}
         />
         <View style={{ marginVertical: 5 }}></View>
         <FoodRecomendation
           setModalVisible={this.props.setModalVisible}
           data={notSelected}
           addRow={this.props.addRow}
+          scroll={this.props.scroll}
+          enableScrollViewScroll={this.props.enableScrollView}
         />
       </View>
     );
@@ -38,28 +42,24 @@ class Food extends React.Component {
 class FoodEaten extends React.Component {
   render() {
     let { data } = this.props;
+    let target = data.map((row) => (
+      <FoodRow
+        selected={true}
+        setModalVisible={this.props.setModalVisible}
+        editRow={this.props.editRow}
+        deleteRow={this.props.deleteRow}
+        data={row}
+        key={row.id}
+      />
+    ));
     return (
       <View style={styles.container}>
-        <ScrollView>
-          <Text style={stylesGlobal.textHead}>Food Consumed</Text>
-          <View style={{ justifyContent: "center", alignItems: "center" }}>
-            <View style={styles.containerIn}>
-              <FlatList
-                data={data}
-                keyExtractor={(row) => row.id}
-                renderItem={(row) => (
-                  <FoodRow
-                    selected={true}
-                    setModalVisible={this.props.setModalVisible}
-                    editRow={this.props.editRow}
-                    deleteRow={this.props.deleteRow}
-                    data={row}
-                  />
-                )}
-              />
-            </View>
-          </View>
-        </ScrollView>
+        <Text style={stylesGlobal.textHead}>Food Consumed</Text>
+        <View style={{ justifyContent: "center", alignItems: "center" }}>
+          <ScrollView style={styles.containerIn} nestedScrollEnabled={true}>
+            {target}
+          </ScrollView>
+        </View>
       </View>
     );
   }
@@ -68,27 +68,23 @@ class FoodEaten extends React.Component {
 class FoodRecomendation extends React.Component {
   render() {
     let { data } = this.props;
+    let target = data.map((row) => (
+      <FoodRow
+        selected={false}
+        setModalVisible={this.props.setModalVisible}
+        addRow={this.props.addRow}
+        data={row}
+        key={row.id}
+      />
+    ));
     return (
       <View style={styles.container}>
-        <ScrollView>
-          <Text style={stylesGlobal.textHead}>Recommendations</Text>
-          <View style={{ justifyContent: "center", alignItems: "center" }}>
-            <View style={styles.containerIn}>
-              <FlatList
-                data={data}
-                keyExtractor={(row) => row.id}
-                renderItem={(row) => (
-                  <FoodRow
-                    selected={false}
-                    setModalVisible={this.props.setModalVisible}
-                    addRow={this.props.addRow}
-                    data={row}
-                  />
-                )}
-              />
-            </View>
-          </View>
-        </ScrollView>
+        <Text style={stylesGlobal.textHead}>Recommendations</Text>
+        <View style={{ justifyContent: "center", alignItems: "center" }}>
+          <ScrollView style={styles.containerIn} nestedScrollEnabled={true}>
+            {target}
+          </ScrollView>
+        </View>
       </View>
     );
   }
@@ -96,7 +92,7 @@ class FoodRecomendation extends React.Component {
 
 class FoodRow extends React.Component {
   render() {
-    let data = this.props.data.item;
+    let data = this.props.data;
     if (this.props.selected) {
       return (
         <View style={styles.row}>
@@ -300,7 +296,8 @@ const styles = StyleSheet.create({
   },
   containerIn: {
     width: "100%",
-    height: 400,
+    minHeight: 400,
+    maxHeight: 400,
     borderRadius: 8,
     marginLeft: 50,
     marginRight: 50,
