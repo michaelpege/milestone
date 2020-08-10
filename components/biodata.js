@@ -291,6 +291,45 @@ class BioForm extends React.Component {
           </View>
         </View>
       );
+    } else if (this.props.title === "Gender") {
+      return (
+        <View style={[styles.bioForm, { flexDirection: "row" }]}>
+          <Text
+            style={[styles.bioFormTitle, { flex: 2 }]}
+          >{`${this.props.title}:`}</Text>
+          <View
+            style={{
+              flexDirection: "row",
+              borderRadius: 32,
+              backgroundColor: color.f_gray,
+              height: 30,
+              width: "100%",
+              flex: 4,
+            }}
+          >
+            <TouchableHighlight
+              style={
+                this.props.content == "Male"
+                  ? [styles.switch, styles.switchActive]
+                  : styles.switch
+              }
+              onPress={() => this.props.onChange("Male", "Gender")}
+            >
+              <Text>Male</Text>
+            </TouchableHighlight>
+            <TouchableHighlight
+              style={
+                this.props.content == "Female"
+                  ? [styles.switch, styles.switchActive]
+                  : styles.switch
+              }
+              onPress={() => this.props.onChange("Female", "Gender")}
+            >
+              <Text>Female</Text>
+            </TouchableHighlight>
+          </View>
+        </View>
+      );
     } else {
       return (
         <View style={styles.bioForm}>
@@ -514,6 +553,17 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     borderBottomColor: "#f8f8f8",
     borderBottomWidth: 1,
+  },
+  switch: {
+    height: "100%",
+    borderRadius: 32,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    flex: 1,
+  },
+  switchActive: {
+    backgroundColor: color.p_teal,
   },
 });
 

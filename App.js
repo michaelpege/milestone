@@ -311,6 +311,15 @@ class App extends React.Component {
 
   render() {
     let modalComponent = this.getModalComponent();
+    let bio = this.state.bio;
+    let foodDBFiltered = foodDatabase.filter((row) => {
+      let check = row.restriction;
+      if (check.filter((row) => bio.allergies.includes(row)).length) {
+        return false;
+      } else {
+        return true;
+      }
+    });
     return (
       <SafeAreaView
         style={{
@@ -367,7 +376,7 @@ class App extends React.Component {
           />
           <Food
             setModalVisible={this.setModalVisible}
-            foodDB={foodDatabase}
+            foodDB={foodDBFiltered}
             selected={this.state.selected}
             addRow={this.addFoodRow}
             editRow={this.editFoodRow}
